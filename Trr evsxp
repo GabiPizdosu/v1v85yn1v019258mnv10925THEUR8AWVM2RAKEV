@@ -124,7 +124,7 @@ local function checkFlareGunPickup()
     while _G.FlareGunEsp == true do
         local flareGunPickup = Workspace:FindFirstChild("FlareGunPickUp")
 
-        if flareGunPickup then
+        if flareGunPickup and flareGunPickup:IsA("Model") then
             local flareGunHighlight = flareGunPickup:FindFirstChild("FlareGunHighlight")
             local flareGunBillboard = flareGunPickup:FindFirstChild("FlareGunBillboardGui")
 
@@ -159,21 +159,19 @@ local function checkFlareGunPickup()
             end
         end
 
-        if not flareGunPickup:IsA("Model") or not flareGunPickup.Parent or flareGunPickup.Parent:IsA("Model") then
-            return
-        end
+        if flareGunPickup then
+            local flareGunNotificationShown = flareGunPickup:FindFirstChild("FlareGunNotificationShown")
 
-        local flareGunNotificationShown = flareGunPickup:FindFirstChild("FlareGunNotificationShown")
-
-        if not flareGunNotificationShown then
-            StarterGui:SetCore("SendNotification", {
-                Title = "Flare Gun Spotted!",
-                Text = "The 'FlareGunPickUp' model has spawned.",
-                Duration = 5
-            })
-            flareGunNotificationShown = Instance.new("BoolValue")
-            flareGunNotificationShown.Name = "FlareGunNotificationShown"
-            flareGunNotificationShown.Parent = flareGunPickup
+            if not flareGunNotificationShown then
+                StarterGui:SetCore("SendNotification", {
+                    Title = "Flare Gun Spotted!",
+                    Text = "The 'FlareGunPickUp' model has spawned.",
+                    Duration = 5
+                })
+                flareGunNotificationShown = Instance.new("BoolValue")
+                flareGunNotificationShown.Name = "FlareGunNotificationShown"
+                flareGunNotificationShown.Parent = flareGunPickup
+            end
         end
     end
 end
