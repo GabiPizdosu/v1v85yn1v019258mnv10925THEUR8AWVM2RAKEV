@@ -20,8 +20,8 @@ rakeTextLabel.Font = Enum.Font.SourceSansBold
 rakeTextLabel.Parent = rakeBillboardGui
 
 -- Function to update the TextLabel above the "Rake" model
-local function updateRakeTextLabel(rakeModel, distance, health, targetVal)
-    rakeTextLabel.Text = string.format("Rake\n%.1f meters away\nHealth: %d\nTarget: %s", distance, health, "Target: " .. targetVal)
+local function updateRakeTextLabel(rakeModel, distance, health)
+    rakeTextLabel.Text = string.format("Rake\n%.1f meters away\nHealth: %d\nTarget: %s", distance, health)
     rakeBillboardGui.Adornee = rakeModel.PrimaryPart
     rakeBillboardGui.Parent = rakeModel
 end
@@ -46,9 +46,7 @@ local function findAndUpdateTextLabelAboveRakeModel(playerPosition)
             health = humanoid.Health
         end
 
-        -- Update the TextLabel above the "Rake" model
-        local targetVal = rakeModel:FindFirstChild("TargetVal") and rakeModel.TargetVal.Value or "No Target"
-        updateRakeTextLabel(rakeModel, distance, health, targetVal)
+        updateRakeTextLabel(rakeModel, distance, health)
 
         return true  -- Model found
     else
