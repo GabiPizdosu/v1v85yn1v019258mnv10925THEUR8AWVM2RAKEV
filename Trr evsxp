@@ -138,82 +138,6 @@ end
 
 -- END OF RAKE ESP --
 
---flare gun esp--
-local Workspace = game:GetService("Workspace")
-local StarterGui = game:GetService("StarterGui")
-
--- Function to check for the presence of the "FlareGunPickUp" model and send a notification when it spawns
-local function checkFlareGunPickup()
-    local flareGunPickup = Workspace:FindFirstChild("FlareGunPickUp")
-
-    if flareGunPickup then
-        -- Highlight the "FlareGunPickUp" model with a red color and display a BillboardGui
-        local flareGunHighlight = flareGunPickup:FindFirstChild("FlareGunHighlight")
-        local flareGunBillboard = flareGunPickup:FindFirstChild("FlareGunBillboardGui")
-
-        if not flareGunHighlight then
-            flareGunHighlight = Instance.new("SelectionBox")
-            flareGunHighlight.Color3 = Color3.new(1, 0, 0) -- Red color
-            flareGunHighlight.Transparency = 0.5
-            flareGunHighlight.SurfaceTransparency = 0.5
-            flareGunHighlight.LineThickness = 0.05
-            flareGunHighlight.Name = "FlareGunHighlight"
-            flareGunHighlight.Parent = flareGunPickup
-        end
-
-        if not flareGunBillboard then
-            flareGunBillboard = Instance.new("BillboardGui")
-            flareGunBillboard.Size = UDim2.new(0, 200, 0, 50)
-            flareGunBillboard.StudsOffset = Vector3.new(0, 10, 0)
-            flareGunBillboard.AlwaysOnTop = true
-
-            local textLabel = Instance.new("TextLabel")
-            textLabel.Size = UDim2.new(1, 0, 1, 0)
-            textLabel.TextColor3 = Color3.new(1, 1, 1)
-            textLabel.BackgroundTransparency = 1
-            textLabel.Font = Enum.Font.SourceSansBold
-            textLabel.Text = "Flare Gun"
-
-            textLabel.Parent = flareGunBillboard
-
-            flareGunBillboard.Name = "FlareGunBillboardGui"
-            flareGunBillboard.Adornee = flareGunPickup
-            flareGunBillboard.Parent = flareGunPickup
-        end
-
-        -- Send a notification if it hasn't been shown before
-        if not flareGunPickup:IsA("Model") or not flareGunPickup.Parent or flareGunPickup.Parent:IsA("Model") then
-            return  -- Ignore if the FlareGunPickUp is not in a valid hierarchy
-        end
-
-        local flareGunNotificationShown = flareGunPickup:FindFirstChild("FlareGunNotificationShown")
-
-        if not flareGunNotificationShown then
-            StarterGui:SetCore("SendNotification", {
-                Title = "Flare Gun Spotted!",
-                Text = "The 'FlareGunPickUp' model has spawned.",
-                Duration = 5
-            })
-            flareGunNotificationShown = Instance.new("BoolValue")
-            flareGunNotificationShown.Name = "FlareGunNotificationShown"
-            flareGunNotificationShown.Parent = flareGunPickup
-        end
-    end
-end
-
--- Variable to control the loop
-local isESPActive = true
-
--- Loop to continuously check for the "FlareGunPickUp" model
-while isESPActive do
-    checkFlareGunPickup()
-    wait(1)  -- Adjust the wait time as needed to avoid excessive checks and reduce performance impact
-end
-
-
---end flare gun esp--
-
-
 function PointsGiver()
 local args = {
     [1] = "SellScraps",
@@ -258,6 +182,7 @@ Callback = function (Value)
 PointsGiver:AddLabel("How to use:")
 PointsGiver:AddLabel("You need scrap,at least 1, then press button")
 PointsGiver:AddLabel("Tip: Use the Bring Scrap button in Scrap tab!")
+
 --buttons
 PointsGiver:AddButton({
   Name = "Give Points",
@@ -265,17 +190,6 @@ PointsGiver:AddButton({
     end
 })
 
-ESP:AddButton({
-  Name = "The Rake",
-  Callback = function(findAndUpdateTextLabelAboveRakeModel)
-    end
-})
-
-ESP:AddButton({
-  Name = "Flare Gun",
-  Callback = function(checkFlareGunPickup)
-    end
-})
 
 --no more buttons from here--
 OrionLib:Init()
