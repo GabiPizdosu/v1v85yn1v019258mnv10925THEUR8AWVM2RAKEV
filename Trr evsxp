@@ -5,10 +5,7 @@ local Window = OrionLib:MakeWindow({Name = "The Rake Remastered", HidePremium = 
 -- Values
 local player = game.Players.LocalPlayer
 local isESPActive = true
-
 _G.InfStamina = true
-_G.RakeEsp = false
-_G.FlareGunEsp = false
 
 -- Functions
 
@@ -30,87 +27,6 @@ function hookInfiniteStamina()
     end
 end
 
--- Rake ESP
-
-local Workspace = game:GetService("Workspace")
-local StarterGui = game:GetService("StarterGui")
-
-local billboardGui = Instance.new("BillboardGui")
-billboardGui.Size = UDim2.new(0, 200, 0, 100)
-billboardGui.StudsOffset = Vector3.new(0, 10, 0)
-billboardGui.AlwaysOnTop = true
-
-local textLabel = Instance.new("TextLabel")
-textLabel.Size = UDim2.new(1, 0, 1, 0)
-textLabel.TextColor3 = Color3.new(1, 1, 1)
-textLabel.BackgroundTransparency = 1
-textLabel.Font = Enum.Font.SourceSansBold
-
-textLabel.Parent = billboardGui
-
-local selectionBox = Instance.new("SelectionBox")
-selectionBox.Color3 = Color3.new(0, 0, 1)
-selectionBox.Transparency = 0.5
-selectionBox.SurfaceTransparency = 0.5
-selectionBox.LineThickness = 0.05
-selectionBox.Adornee = Instance.new("Part")
-
-local isNotificationShown = false
-local isSearchingNotificationShown = false
-local startTime = tick()
-local searchingNotificationDelay = 20
-
-local function calculateDistance(point1, point2)
-    return (point1 - point2).Magnitude
-end
-
-local function findAndUpdateTextLabelAboveRakeModel(playerPosition)
-    while _G.RakeEsp do
-        local rakeModel = Workspace:FindFirstChild("Rake")
-
-        if rakeModel then
-            local rakePosition = rakeModel.PrimaryPart.Position
-            local distance = calculateDistance(playerPosition, rakePosition)
-
-            local health = 0
-            local humanoid = rakeModel:FindFirstChildOfClass("Humanoid")
-            if humanoid then
-                health = humanoid.Health
-            end
-
-            textLabel.Text = string.format("Rake\n%.1f meters away\nHealth: %d", distance, health)
-            billboardGui.Adornee = rakeModel.PrimaryPart
-            billboardGui.Parent = rakeModel
-
-            selectionBox.Parent = rakeModel
-            selectionBox.Adornee = rakeModel.PrimaryPart
-
-            if not isNotificationShown then
-                StarterGui:SetCore("SendNotification", {
-                    Title = "ESP Activated!",
-                    Text = string.format("The 'Rake' model was found. Distance: %.1f meters", distance),
-                    Duration = 5
-                })
-                isNotificationShown = true
-            end
-
-            return true
-        else
-            selectionBox.Parent = nil
-
-            if not isSearchingNotificationShown and tick() - startTime > searchingNotificationDelay then
-                StarterGui:SetCore("SendNotification", {
-                    Title = "Searching...",
-                    Text = "The 'Rake' model was not found. Retrying...",
-                    Duration = 3
-                })
-                isSearchingNotificationShown = true
-            end
-
-            return false
-        end
-    end
-end
 
 game:GetService("RunService").Heartbeat:Connect(function()
     if isESPActive then
@@ -236,12 +152,88 @@ PointsGiverTab:AddButton({
 ESP:AddButton({
     Name = "The Rake",
     Callback = function()
-        local playerPosition = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
-        if playerPosition then
-            playerPosition = playerPosition.Position
-            findAndUpdateTextLabelAboveRakeModel(playerPosition)
+       -- Rake ESP
+
+local Workspace = game:GetService("Workspace")
+local StarterGui = game:GetService("StarterGui")
+
+local billboardGui = Instance.new("BillboardGui")
+billboardGui.Size = UDim2.new(0, 200, 0, 100)
+billboardGui.StudsOffset = Vector3.new(0, 10, 0)
+billboardGui.AlwaysOnTop = true
+
+local textLabel = Instance.new("TextLabel")
+textLabel.Size = UDim2.new(1, 0, 1, 0)
+textLabel.TextColor3 = Color3.new(1, 1, 1)
+textLabel.BackgroundTransparency = 1
+textLabel.Font = Enum.Font.SourceSansBold
+
+textLabel.Parent = billboardGui
+
+local selectionBox = Instance.new("SelectionBox")
+selectionBox.Color3 = Color3.new(0, 0, 1)
+selectionBox.Transparency = 0.5
+selectionBox.SurfaceTransparency = 0.5
+selectionBox.LineThickness = 0.05
+selectionBox.Adornee = Instance.new("Part")
+
+local isNotificationShown = false
+local isSearchingNotificationShown = false
+local startTime = tick()
+local searchingNotificationDelay = 20
+
+local function calculateDistance(point1, point2)
+    return (point1 - point2).Magnitude
+end
+
+local function findAndUpdateTextLabelAboveRakeModel(playerPosition)
+    while _G.RakeEsp do
+        local rakeModel = Workspace:FindFirstChild("Rake")
+
+        if rakeModel then
+            local rakePosition = rakeModel.PrimaryPart.Position
+            local distance = calculateDistance(playerPosition, rakePosition)
+
+            local health = 0
+            local humanoid = rakeModel:FindFirstChildOfClass("Humanoid")
+            if humanoid then
+                health = humanoid.Health
+            end
+
+            textLabel.Text = string.format("Rake\n%.1f meters away\nHealth: %d", distance, health)
+            billboardGui.Adornee = rakeModel.PrimaryPart
+            billboardGui.Parent = rakeModel
+
+            selectionBox.Parent = rakeModel
+            selectionBox.Adornee = rakeModel.PrimaryPart
+
+            if not isNotificationShown then
+                StarterGui:SetCore("SendNotification", {
+                    Title = "ESP Activated!",
+                    Text = string.format("The 'Rake' model was found. Distance: %.1f meters", distance),
+                    Duration = 5
+                })
+                isNotificationShown = true
+            end
+
+            return true
+        else
+            selectionBox.Parent = nil
+
+            if not isSearchingNotificationShown and tick() - startTime > searchingNotificationDelay then
+                StarterGui:SetCore("SendNotification", {
+                    Title = "Searching...",
+                    Text = "The 'Rake' model was not found. Retrying...",
+                    Duration = 3
+                })
+                isSearchingNotificationShown = true
+            end
+
+            return false
         end
     end
+end
+end
 })
 
 Main:AddButton({
