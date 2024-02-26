@@ -1,5 +1,6 @@
+-- Load Orion library
 local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
-local Window = OrionLib:MakeWindow({Name = "The Rake Remastered", HidePremium = false, SaveConfig = false,IntroText = "The Rake Remastered" , ConfigFolder = "da reik config"})
+local Window = OrionLib:MakeWindow({Name = "The Rake Remastered", HidePremium = false, SaveConfig = false, IntroText = "The Rake Remastered", ConfigFolder = "da reik config"})
 
 -- Values
 local player = game.Players.LocalPlayer
@@ -12,12 +13,15 @@ _G.FlareGunEsp = true
 -- Functions
 
 function hookInfiniteStamina()
-    while _G.InfStamina == true do
-        for _,v in pairs(getloadedmodules()) do 
+    while _G.InfStamina do
+        for _, v in pairs(getloadedmodules()) do
             if v.Name == "M_H" then
                 local module = require(v)
-                local old; old = hookfunction(module.TakeStamina, function(smth, amount)
-                    if amount > 0 then return old(smth, -0.5) end 
+                local old;
+                old = hookfunction(module.TakeStamina, function(smth, amount)
+                    if amount > 0 then
+                        return old(smth, -0.5)
+                    end
                     return old(smth, amount)
                 end)
             end
@@ -61,7 +65,7 @@ local function calculateDistance(point1, point2)
 end
 
 local function findAndUpdateTextLabelAboveRakeModel(playerPosition)
-    while _G.RakeEsp == true do
+    while _G.RakeEsp do
         local rakeModel = Workspace:FindFirstChild("Rake")
 
         if rakeModel then
@@ -121,10 +125,10 @@ end)
 -- Flare Gun ESP
 
 local function checkFlareGunPickup()
-    while _G.FlareGunEsp == true do
+    while _G.FlareGunEsp do
         local flareGunPickup = Workspace:FindFirstChild("FlareGunPickUp")
 
-        if flareGunPickup and flareGunPickup:IsA("Model") then
+        if flareGunPickup then
             local flareGunHighlight = flareGunPickup:FindFirstChild("FlareGunHighlight")
             local flareGunBillboard = flareGunPickup:FindFirstChild("FlareGunBillboardGui")
 
@@ -159,27 +163,26 @@ local function checkFlareGunPickup()
             end
         end
 
-        if flareGunPickup then
-            local flareGunNotificationShown = flareGunPickup:FindFirstChild("FlareGunNotificationShown")
+        if not flareGunPickup:IsA("Model") or not flareGunPickup.Parent or flareGunPickup.Parent:IsA("Model") then
+            return
+        end
 
-            if not flareGunNotificationShown then
-                StarterGui:SetCore("SendNotification", {
-                    Title = "Flare Gun Spotted!",
-                    Text = "The 'FlareGunPickUp' model has spawned.",
-                    Duration = 5
-                })
-                flareGunNotificationShown = Instance.new("BoolValue")
-                flareGunNotificationShown.Name = "FlareGunNotificationShown"
-                flareGunNotificationShown.Parent = flareGunPickup
-            end
+        local flareGunNotificationShown = flareGunPickup:FindFirstChild("FlareGunNotificationShown")
+
+        if not flareGunNotificationShown then
+            StarterGui:SetCore("SendNotification", {
+                Title = "Flare Gun Spotted!",
+                Text = "The 'FlareGunPickUp' model has spawned.",
+                Duration = 5
+            })
+            flareGunNotificationShown = Instance.new("BoolValue")
+            flareGunNotificationShown.Name = "FlareGunNotificationShown"
+            flareGunNotificationShown.Parent = flareGunPickup
         end
     end
 end
 
 -- Variable to control the loop
-local isESPActive = true
-
--- Loop to continuously check for the "FlareGunPickUp" model
 game:GetService("RunService").Heartbeat:Connect(function()
     if isESPActive then
         checkFlareGunPickup()
