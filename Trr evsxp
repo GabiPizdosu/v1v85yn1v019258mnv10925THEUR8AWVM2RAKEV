@@ -2,34 +2,32 @@ local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
 local StarterGui = game:GetService("StarterGui")
 
--- Function to create or update the TextLabel above the "Rake" model's head
-local function updateTextLabelAboveRakeModel(rakeModel, distance, health)
-    local billboardGui = rakeModel:FindFirstChild("ESPBillboardGui")
+-- Create the BillboardGui and TextLabel
+local billboardGui = Instance.new("BillboardGui")
+billboardGui.Size = UDim2.new(0, 200, 0, 100)
+billboardGui.StudsOffset = Vector3.new(0, 10, 0)
+billboardGui.AlwaysOnTop = true
 
-    if not billboardGui then
-        billboardGui = Instance.new("BillboardGui")
-        billboardGui.Name = "ESPBillboardGui"
-        billboardGui.Adornee = rakeModel.PrimaryPart  -- Assuming the model has a PrimaryPart set
-        billboardGui.Size = UDim2.new(0, 200, 0, 100)
-        billboardGui.StudsOffset = Vector3.new(0, 10, 0)  -- Adjust the height above the head
-        billboardGui.AlwaysOnTop = true  -- Display above all other GUI elements, including walls
+local textLabel = Instance.new("TextLabel")
+textLabel.Size = UDim2.new(1, 0, 1, 0)
+textLabel.TextColor3 = Color3.new(1, 1, 1)
+textLabel.BackgroundTransparency = 1
+textLabel.Font = Enum.Font.SourceSansBold
 
-        local textLabel = Instance.new("TextLabel")
-        textLabel.Name = "ESPTextLabel"
-        textLabel.Size = UDim2.new(1, 0, 1, 0)
-        textLabel.TextColor3 = Color3.new(1, 1, 1)  -- Bright white color
-        textLabel.BackgroundTransparency = 1
-        textLabel.Font = Enum.Font.SourceSansBold  -- Optional: Set font to bold
+textLabel.Parent = billboardGui
 
-        textLabel.Parent = billboardGui
-        billboardGui.Parent = rakeModel
-    end
+-- Reference to the LocalPlayer for distance calculation
+local player = Players.LocalPlayer
 
-    local textLabel = billboardGui:FindFirstChild("ESPTextLabel")
-    if textLabel then
-        textLabel.Text = string.format("Rake\n%.1f meters away\nHealth: %d", distance, health)
-    end
-end
+-- Variable to check if "ESP Activated!" notification has been shown
+local isNotificationShown = false
+
+-- Variable to check if "Searching..." notification has been shown
+local isSearchingNotificationShown = false
+
+-- Timer variables
+local startTime = tick()
+local searchingNotificationDelay = 20  -- Delay in seconds
 
 -- Function to calculate the distance between two points
 local function calculateDistance(point1, point2)
@@ -51,28 +49,38 @@ local function findAndUpdateTextLabelAboveRakeModel(playerPosition)
             health = humanoid.Health
         end
 
-        updateTextLabelAboveRakeModel(rakeModel, distance, health)
-        StarterGui:SetCore("SendNotification", {
-            Title = "ESP Activated!",
-            Text = string.format("The 'Rake' model was found. Distance: %.1f meters", distance),
-            Duration = 5
-        })
+        textLabel.Text = string.format("Rake\n%.1f meters away\nHealth: %d", distance, health)
+        billboardGui.Adornee = rakeModel.PrimaryPart
+        billboardGui.Parent = rakeModel
+
+        -- Show "ESP Activated!" notification if it hasn't been shown before
+        if not isNotificationShown then
+            StarterGui:SetCore("SendNotification", {
+                Title = "ESP Activated!",
+                Text = string.format("The 'Rake' model was found. Distance: %.1f meters", distance),
+                Duration = 5
+            })
+            isNotificationShown = true
+        end
+
         return true  -- Model found
     else
-        StarterGui:SetCore("SendNotification", {
-            Title = "Searching...",
-            Text = "The 'Rake' model was not found. Retrying...",
-            Duration = 5
-        })
+        -- Show "Searching..." notification after the delay
+        if not isSearchingNotificationShown and tick() - startTime > searchingNotificationDelay then
+            StarterGui:SetCore("SendNotification", {
+                Title = "Searching...",
+                Text = "The 'Rake' model was not found. Retrying...",
+                Duration = 3
+            })
+            isSearchingNotificationShown = true
+        end
+
         return false  -- Model not found
     end
 end
 
 -- Variable to control the loop
 local isESPActive = true
-
--- Reference to the LocalPlayer for distance calculation
-local player = Players.LocalPlayer
 
 -- Loop to continuously check and update the TextLabel above the "Rake" model's head
 while isESPActive do
