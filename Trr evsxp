@@ -47,7 +47,7 @@ local function findAndUpdateTextLabelAboveRakeModel(playerPosition)
         end
 
         -- Update the TextLabel above the "Rake" model
-        updateRakeTextLabel(rakeModel, distance, health, rakeModel.TargetVal or "No Target")
+        updateRakeTextLabel(rakeModel, distance, health, rakeModel:FindFirstChild("TargetVal") and rakeModel.TargetVal.Value or "No Target")
 
         return true  -- Model found
     else
@@ -60,8 +60,8 @@ local isESPActive = true
 
 -- Loop to continuously check and update the TextLabel above the "Rake" model's head
 while isESPActive do
-    local playerPosition = player.Character and player.Character:WaitForChild("HumanoidRootPart").Position or Vector3.new()
-    
+    local playerPosition = player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player.Character.HumanoidRootPart.Position or Vector3.new()
+
     if not findAndUpdateTextLabelAboveRakeModel(playerPosition) then
         wait(1)  -- Adjust the wait time as needed to avoid excessive checks and reduce performance impact
     else
