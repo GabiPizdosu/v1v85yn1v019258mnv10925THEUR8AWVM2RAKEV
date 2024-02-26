@@ -3,8 +3,8 @@ local Window = OrionLib:MakeWindow({Name = "The Rake Remastered", HidePremium = 
 
 --values
 _G.InfStamina = true
-
-
+_G.RakeEsp = true
+_G.FlareGunEsp = true
 --functions--
 function hookInfiniteStamina()
   while _G.InfStamina == true do
@@ -71,6 +71,7 @@ end
 
 -- Function to check for the presence of the "Rake" model in Workspace and update the TextLabel
 local function findAndUpdateTextLabelAboveRakeModel(playerPosition)
+  while _G.RakeEsp == true do
     local rakeModel = Workspace:FindFirstChild("Rake")
 
     if rakeModel then
@@ -131,10 +132,9 @@ while isESPActive do
     if not findAndUpdateTextLabelAboveRakeModel(playerPosition) then
         wait(1)  -- Adjust the wait time as needed to avoid excessive checks and reduce performance impact
     else
-        wait(1)  -- Wait before refreshing the distance
+        wait(0.3)  -- Wait before refreshing the distance
     end
 end
-
 
 -- END OF RAKE ESP --
 
@@ -144,6 +144,7 @@ local StarterGui = game:GetService("StarterGui")
 
 -- Function to check for the presence of the "FlareGunPickUp" model and send a notification when it spawns
 local function checkFlareGunPickup()
+    while _G.FlareGunEsp == true do
     local flareGunPickup = Workspace:FindFirstChild("FlareGunPickUp")
 
     if flareGunPickup then
@@ -180,7 +181,8 @@ local function checkFlareGunPickup()
             flareGunBillboard.Adornee = flareGunPickup
             flareGunBillboard.Parent = flareGunPickup
         end
-
+      else 
+      end
         -- Send a notification if it hasn't been shown before
         if not flareGunPickup:IsA("Model") or not flareGunPickup.Parent or flareGunPickup.Parent:IsA("Model") then
             return  -- Ignore if the FlareGunPickUp is not in a valid hierarchy
@@ -200,7 +202,7 @@ local function checkFlareGunPickup()
         end
     end
 end
-
+  end
 -- Variable to control the loop
 local isESPActive = true
 
@@ -244,15 +246,6 @@ local PointsGiver = Window:MakeTab({
   PremiumOnly = false
 })
 
--- toggles--
-Main:AddToggle({
-Name = "Infinite Stamina",
-Default = false,
-Callback = function (Value)
-      _G.InfStamina = Value
-        hookInfiniteStamina()
-    end
-    })
 
 --textboxurile alea nuj--
 PointsGiver:AddLabel("How to use:")
@@ -271,6 +264,14 @@ ESP:AddButton({
     end
 })
 
+Main:AddButton({
+Name = "Infinite Stamina",
+Callback = function (Value)
+      _G.InfStamina = Value
+        hookInfiniteStamina()
+    end
+})
+
 ESP:AddButton({
   Name = "Flare Gun",
   Callback = function(checkFlareGunPickup)
@@ -279,3 +280,4 @@ ESP:AddButton({
 
 --no more buttons from here--
 OrionLib:Init()
+
