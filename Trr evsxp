@@ -89,6 +89,6 @@ while isESPActive do
     if not findAndUpdateTextLabelAboveRakeModel(playerPosition) then
         wait(1)  -- Adjust the wait time as needed to avoid excessive checks and reduce performance impact
     else
-        wait(1)  -- Wait before refreshing the distance
+        wait(0.3)  -- Wait before refreshing the distance
     end
 end
