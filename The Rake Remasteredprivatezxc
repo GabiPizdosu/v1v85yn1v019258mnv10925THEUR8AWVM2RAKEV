@@ -1,5 +1,5 @@
 local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
-local Window = OrionLib:MakeWindow({Name = "The Rake Remastered", HidePremium = false, SaveConfig = false,IntroText = "The Rake Remastered" , ConfigFolder = "da reik config"})
+local Window = OrionLib:MakeWindow({Name = "The Rake Remastered", HidePremium = false, SaveConfig = false, IntroText = "The Rake Remastered" , ConfigFolder = "da reik config"})
 
 --values
 _G.InfStamina = true
@@ -13,37 +13,37 @@ end
 
 -- Function to check for the presence of the "Rake" model in Workspace and update the TextLabel
 local function findAndUpdateTextLabelAboveRakeModel(playerPosition)
-  while _G.RakeEsp == true do
-    local rakeModel = Workspace:FindFirstChild("Rake")
+    while _G.RakeEsp == true do
+        local rakeModel = workspace:FindFirstChild("Rake")
 
-    if rakeModel then
-        local rakePosition = rakeModel.PrimaryPart.Position
-        local distance = calculateDistance(playerPosition, rakePosition)
+        if rakeModel then
+            local rakePosition = rakeModel.PrimaryPart.Position
+            local distance = calculateDistance(playerPosition, rakePosition)
 
-        -- If the model has a Humanoid, get its health
-        local health = 0
-        local humanoid = rakeModel:FindFirstChildOfClass("Humanoid")
-        if humanoid then
-            health = humanoid.Health
+            -- If the model has a Humanoid, get its health
+            local health = 0
+            local humanoid = rakeModel:FindFirstChildOfClass("Humanoid")
+            if humanoid then
+                health = humanoid.Health
+            end
+
+            -- Your existing code for updating the ESP
+            -- ...
+
+            return true  -- Model found
+        else
+            -- Your existing code for handling when the model is not found
+            -- ...
+
+            return false  -- Model not found
         end
-
-        -- Your existing code for updating the ESP
-        -- ...
-
-        return true  -- Model found
-    else
-        -- Your existing code for handling when the model is not found
-        -- ...
-
-        return false  -- Model not found
     end
-  end
 end
 
 -- Function to check for the presence of the "FlareGunPickUp" model and send a notification when it spawns
 local function checkFlareGunPickup()
     while _G.FlareGunEsp == true do
-        local flareGunPickup = Workspace:FindFirstChild("FlareGunPickUp")
+        local flareGunPickup = workspace:FindFirstChild("FlareGunPickUp")
 
         if flareGunPickup then
             -- Your existing code for updating the Flare Gun ESP
