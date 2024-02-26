@@ -1,1 +1,55 @@
+local Workspace = game:GetService("Workspace")
+local StarterGui = game:GetService("StarterGui")
 
+-- Function to add a TextLabel above the "Rake" model's head
+local function addTextLabelAboveRakeModel(rakeModel)
+    local billboardGui = Instance.new("BillboardGui")
+    billboardGui.Adornee = rakeModel.PrimaryPart  -- Assuming the model has a PrimaryPart set
+    billboardGui.Size = UDim2.new(0, 200, 0, 50)
+    billboardGui.StudsOffset = Vector3.new(0, 5, 0)  -- Adjust the height above the head
+    billboardGui.AlwaysOnTop = true  -- Display above all other GUI elements, including walls
+
+    local textLabel = Instance.new("TextLabel")
+    textLabel.Text = "Rake"
+    textLabel.Size = UDim2.new(1, 0, 1, 0)
+    textLabel.TextColor3 = Color3.new(1, 1, 1)  -- Bright white color
+    textLabel.BackgroundTransparency = 1
+    textLabel.Font = Enum.Font.SourceSansBold  -- Optional: Set font to bold
+
+    textLabel.Parent = billboardGui
+    billboardGui.Parent = rakeModel
+end
+
+-- Function to check for the presence of the "Rake" model in Workspace and add a TextLabel
+local function findAndAddTextLabelAboveRakeModel()
+    local rakeModel = Workspace:FindFirstChild("Rake")
+
+    if rakeModel then
+        addTextLabelAboveRakeModel(rakeModel)
+        StarterGui:SetCore("SendNotification", {
+            Title = "ESP Activated!",
+            Text = "The 'Rake' model was found.",
+            Duration = 5
+        })
+        return true  -- Model found
+    else
+        StarterGui:SetCore("SendNotification", {
+            Title = "Searching...",
+            Text = "The 'Rake' model was not found. Retrying...",
+            Duration = 5
+        })
+        return false  -- Model not found
+    end
+end
+
+-- Variable to control the loop
+local isESPActive = true
+
+-- Loop to continuously check and add a TextLabel above the "Rake" model's head
+while isESPActive do
+    if not findAndAddTextLabelAboveRakeModel() then
+        wait(1)  -- Adjust the wait time as needed to avoid excessive checks and reduce performance impact
+    else
+        isESPActive = false  -- Stop the loop when the model is found
+    end
+end
