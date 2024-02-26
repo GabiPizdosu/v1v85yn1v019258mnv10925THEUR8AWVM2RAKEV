@@ -2,32 +2,29 @@ local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
 local StarterGui = game:GetService("StarterGui")
 
--- Create the BillboardGui and TextLabel
-local billboardGui = Instance.new("BillboardGui")
-billboardGui.Size = UDim2.new(0, 200, 0, 100)
-billboardGui.StudsOffset = Vector3.new(0, 10, 0)
-billboardGui.AlwaysOnTop = true
-
-local textLabel = Instance.new("TextLabel")
-textLabel.Size = UDim2.new(1, 0, 1, 0)
-textLabel.TextColor3 = Color3.new(1, 1, 1)
-textLabel.BackgroundTransparency = 1
-textLabel.Font = Enum.Font.SourceSansBold
-
-textLabel.Parent = billboardGui
-
 -- Reference to the LocalPlayer for distance calculation
 local player = Players.LocalPlayer
 
--- Variable to check if "ESP Activated!" notification has been shown
-local isNotificationShown = false
+-- Create the BillboardGui and TextLabel for "Rake"
+local rakeBillboardGui = Instance.new("BillboardGui")
+rakeBillboardGui.Size = UDim2.new(0, 200, 0, 100)
+rakeBillboardGui.StudsOffset = Vector3.new(0, 10, 0)
+rakeBillboardGui.AlwaysOnTop = true
 
--- Variable to check if "Searching..." notification has been shown
-local isSearchingNotificationShown = false
+local rakeTextLabel = Instance.new("TextLabel")
+rakeTextLabel.Size = UDim2.new(1, 0, 1, 0)
+rakeTextLabel.TextColor3 = Color3.new(1, 1, 1)
+rakeTextLabel.BackgroundTransparency = 1
+rakeTextLabel.Font = Enum.Font.SourceSansBold
 
--- Timer variables
-local startTime = tick()
-local searchingNotificationDelay = 20  -- Delay in seconds
+rakeTextLabel.Parent = rakeBillboardGui
+
+-- Function to update the TextLabel above the "Rake" model
+local function updateRakeTextLabel(rakeModel, distance, health, targetVal)
+    rakeTextLabel.Text = string.format("Rake\n%.1f meters away\nHealth: %d\nTarget: %s", distance, health, targetVal)
+    rakeBillboardGui.Adornee = rakeModel.PrimaryPart
+    rakeBillboardGui.Parent = rakeModel
+end
 
 -- Function to calculate the distance between two points
 local function calculateDistance(point1, point2)
@@ -49,32 +46,11 @@ local function findAndUpdateTextLabelAboveRakeModel(playerPosition)
             health = humanoid.Health
         end
 
-        textLabel.Text = string.format("Rake\n%.1f meters away\nHealth: %d", distance, health)
-        billboardGui.Adornee = rakeModel.PrimaryPart
-        billboardGui.Parent = rakeModel
-
-        -- Show "ESP Activated!" notification if it hasn't been shown before
-        if not isNotificationShown then
-            StarterGui:SetCore("SendNotification", {
-                Title = "ESP Activated!",
-                Text = string.format("The 'Rake' model was found. Distance: %.1f meters", distance),
-                Duration = 5
-            })
-            isNotificationShown = true
-        end
+        -- Update the TextLabel above the "Rake" model
+        updateRakeTextLabel(rakeModel, distance, health, rakeModel.TargetVal or "No Target")
 
         return true  -- Model found
     else
-        -- Show "Searching..." notification after the delay
-        if not isSearchingNotificationShown and tick() - startTime > searchingNotificationDelay then
-            StarterGui:SetCore("SendNotification", {
-                Title = "Searching...",
-                Text = "The 'Rake' model was not found. Retrying...",
-                Duration = 3
-            })
-            isSearchingNotificationShown = true
-        end
-
         return false  -- Model not found
     end
 end
