@@ -1,0 +1,121 @@
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+local Window = OrionLib:MakeWindow({Name = "da reik", HidePremium = false, SaveConfig = false,IntroText = "The Rake Remastered" , ConfigFolder = "da reik config"})
+
+--values
+_G.InfStamina = true
+_G.AlwaysDay = true
+
+--functions--
+function hookInfiniteStamina()
+  while _G.InfStamina == true do
+  for _,v in pairs(getloadedmodules()) do 
+    if v.Name == "M_H" then
+      local module = require(v)
+      local old; old = hookfunction(module.TakeStamina, function(smth, amount)
+        if amount > 0 then return old(smth, -0.5) end 
+      
+        return old(smth, amount)
+      end)
+    end
+      wait(0.040)
+  end
+end
+
+end
+
+--[RAKE ESP!!!!!1]--
+local Workspace = game:GetService("Workspace")
+local RunService = game:GetService("RunService")
+
+-- Function to highlight a model with red color
+local function highlightModel(model)
+    for _, part in pairs(model:GetDescendants()) do
+        if part:IsA("BasePart") then
+            part.BrickColor = BrickColor.new("Bright red")
+        end
+    end
+end
+
+-- Function to check for the presence of the "Rake" model in Workspace
+local function findAndHighlightRakeModel()
+    local rakeModel = Workspace:FindFirstChild("Rake")
+
+    if rakeModel then
+        highlightModel(rakeModel)
+        return true  -- Model found , exit the loop
+    end
+
+    return false -- Model not found , continue the loop
+end
+
+-- Loop to continuously check and highlight the "Rake" model
+while not findAndHighlightRakeModel() do
+    wait(2.5)  -- Adjust the wait time as needed to avoid excessive checks and reduce performance impact
+end
+-- END OF RAKE ESP --
+
+
+function PointsGiver()
+local args = {
+    [1] = "SellScraps",
+    [2] = "Scraps"
+}
+
+game:GetService("ReplicatedStorage").ShopEvent:FireServer(unpack(args))
+for i = 1, 200 do PointsGiver()
+  end
+end
+
+-- tabs--
+local Main = Window:MakeTab({
+  Name = "Test",
+  Icon = "rbxassetid://4483345998",
+  PremiumOnly = false
+})
+
+local ESP = Window:MakeTab({
+  Name = "esp",
+  Icon = "rbxassetid://4483345998",
+  PremiumOnly = false
+})
+
+local PointsGiver = Window:MakeTab({
+  Name = "Points Giver",
+  Icon = "rbxassetid://4483345998",
+  PremiumOnly = false
+})
+
+-- toggles--
+Main:AddToggle({
+Name = "Always day",
+Default = false,
+Callback = function (Value)
+      _G.AlwaysDay = Value
+        updateVisualsToAlwaysDay()
+    end
+    })
+
+Main:AddToggle({
+Name = "Infinite Stamina",
+Default = false,
+Callback = function (Value)
+      _G.InfStamina = Value
+        hookInfiniteStamina()
+    end
+    })
+
+--textboxurile alea nuj--
+PointsGiver:AddLabel("How to use:")
+PointsGiver:AddLabel("You need scrap,at least 1, then press button")
+PointsGiver:AddLabel("Tip: Use the Bring Scrap button in Scrap tab!")
+--buttons
+PointsGiver:AddButton({
+  Name = "Give Points",
+  Callback = function(PointsGiver)
+    end
+})
+
+
+OrionLib:init()
+
+
