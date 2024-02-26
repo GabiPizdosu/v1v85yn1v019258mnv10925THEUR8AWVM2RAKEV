@@ -1,92 +1,14 @@
 local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
-local Window = OrionLib:MakeWindow({Name = "The Rake Remastered", HidePremium = false, SaveConfig = false, IntroText = "The Rake Remastered" , ConfigFolder = "da reik config"})
+local Window = OrionLib:MakeWindow({Name = "da reik", HidePremium = false, SaveConfig = false, IntroText = "da reik script", ConfigFolder = "da reik config"})
 
---values
-_G.InfStamina = true
-_G.RakeEsp = true
-_G.FlareGunEsp = true
+-- Values
 
--- Function to calculate the distance between two points
-local function calculateDistance(point1, point2)
-    return (point1 - point2).Magnitude
-end
 
--- Function to check for the presence of the "Rake" model in Workspace and update the TextLabel
-local function findAndUpdateTextLabelAboveRakeModel(playerPosition)
-    while _G.RakeEsp == true do
-        local rakeModel = workspace:FindFirstChild("Rake")
 
-        if rakeModel then
-            local rakePosition = rakeModel.PrimaryPart.Position
-            local distance = calculateDistance(playerPosition, rakePosition)
 
-            -- If the model has a Humanoid, get its health
-            local health = 0
-            local humanoid = rakeModel:FindFirstChildOfClass("Humanoid")
-            if humanoid then
-                health = humanoid.Health
-            end
 
-            -- Your existing code for updating the ESP
-            -- ...
 
-            return true  -- Model found
-        else
-            -- Your existing code for handling when the model is not found
-            -- ...
 
-            return false  -- Model not found
-        end
-    end
-end
-
--- Function to check for the presence of the "FlareGunPickUp" model and send a notification when it spawns
-local function checkFlareGunPickup()
-    while _G.FlareGunEsp == true do
-        local flareGunPickup = workspace:FindFirstChild("FlareGunPickUp")
-
-        if flareGunPickup then
-            -- Your existing code for updating the Flare Gun ESP
-            -- ...
-        end
-    end
-end
-
--- Function to hook Infinite Stamina
-function hookInfiniteStamina()
-    while _G.InfStamina == true do
-        for _,v in pairs(getloadedmodules()) do 
-            if v.Name == "M_H" then
-                local module = require(v)
-                local old; old = hookfunction(module.TakeStamina, function(smth, amount)
-                    if amount > 0 then return old(smth, -0.5) end 
-                    return old(smth, amount)
-                end)
-            end
-            wait(0.040)
-        end
-    end
-end
-
--- Loop to continuously check and update the TextLabel above the "Rake" model's head
-spawn(function()
-    while true do
-        local playerPosition = player.Character and player.Character:FindFirstChild("HumanoidRootPart").Position or Vector3.new()
-        findAndUpdateTextLabelAboveRakeModel(playerPosition)
-        wait(0.3)  -- Wait before refreshing the distance
-    end
-end)
-
--- Loop to continuously check for the "FlareGunPickUp" model
-spawn(function()
-    while true do
-        checkFlareGunPickup()
-        wait(1)  -- Adjust the wait time as needed to avoid excessive checks and reduce performance impact
-    end
-end)
-
--- Loop to continuously hook Infinite Stamina
-spawn(hookInfiniteStamina)
 
 -- Tabs
 local Main = Window:MakeTab({
@@ -95,53 +17,58 @@ local Main = Window:MakeTab({
     PremiumOnly = false
 })
 
-local ESP = Window:MakeTab({
-    Name = "esp",
-    Icon = "rbxassetid://4483345998",
-    PremiumOnly = false
-})
 
-local PointsGiver = Window:MakeTab({
-    Name = "Points Giver",
-    Icon = "rbxassetid://4483345998",
-    PremiumOnly = false
-})
 
--- Text labels and buttons for Points Giver tab
-PointsGiver:AddLabel("How to use:")
-PointsGiver:AddLabel("You need scrap, at least 1, then press button")
-PointsGiver:AddLabel("Tip: Use the Bring Scrap button in Scrap tab!")
 
-PointsGiver:AddButton({
-    Name = "Give Points",
-    Callback = function()
-        PointsGiver()
-    end
-})
+--toggles--
 
--- Buttons for ESP tab
-ESP:AddButton({
-    Name = "The Rake",
-    Callback = function()
-        findAndUpdateTextLabelAboveRakeModel(playerPosition)
-    end
-})
 
-ESP:AddButton({
-    Name = "Flare Gun",
-    Callback = function()
-        checkFlareGunPickup()
-    end
-})
 
--- Button for Main tab
+
+
+
+
+--end of toggles--
+
+
+
+
+
+
+--BUTTONS--
 Main:AddButton({
     Name = "Infinite Stamina",
-    Callback = function (Value)
-        _G.InfStamina = Value
-        hookInfiniteStamina()
-    end
+    Default = false,
+    Callback = function()
+          while _G.InfStamina == true do
+              for _, v in pairs(getloadedmodules()) do
+                  if v.Name == "M_H" then
+                      local module = require(v)
+                      local old; old = hookfunction(module.TakeStamina, function(smth, amount)
+                          if amount > 0 then return old(smth, -0.5) end
+                          return old(smth, amount)
+                      end)
+                  end
+                  wait(0.1)
+              end
+          end
+      end
 })
 
--- Initialize the OrionLib
+
+--END OF BUTTONS--
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 OrionLib:Init()
