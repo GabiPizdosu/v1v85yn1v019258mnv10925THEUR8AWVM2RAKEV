@@ -2,23 +2,33 @@ local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
 local StarterGui = game:GetService("StarterGui")
 
--- Function to add a TextLabel above the "Rake" model's head
-local function addTextLabelAboveRakeModel(rakeModel, distance, health)
-    local billboardGui = Instance.new("BillboardGui")
-    billboardGui.Adornee = rakeModel.PrimaryPart  -- Assuming the model has a PrimaryPart set
-    billboardGui.Size = UDim2.new(0, 200, 0, 100)
-    billboardGui.StudsOffset = Vector3.new(0, 10, 0)  -- Adjust the height above the head
-    billboardGui.AlwaysOnTop = true  -- Display above all other GUI elements, including walls
+-- Function to create or update the TextLabel above the "Rake" model's head
+local function updateTextLabelAboveRakeModel(rakeModel, distance, health)
+    local billboardGui = rakeModel:FindFirstChild("ESPBillboardGui")
 
-    local textLabel = Instance.new("TextLabel")
-    textLabel.Text = string.format("Rake\n%.1f meters away\nHealth: %d", distance, health)
-    textLabel.Size = UDim2.new(1, 0, 1, 0)
-    textLabel.TextColor3 = Color3.new(1, 1, 1)  -- Bright white color
-    textLabel.BackgroundTransparency = 1
-    textLabel.Font = Enum.Font.SourceSansBold  -- Optional: Set font to bold
+    if not billboardGui then
+        billboardGui = Instance.new("BillboardGui")
+        billboardGui.Name = "ESPBillboardGui"
+        billboardGui.Adornee = rakeModel.PrimaryPart  -- Assuming the model has a PrimaryPart set
+        billboardGui.Size = UDim2.new(0, 200, 0, 100)
+        billboardGui.StudsOffset = Vector3.new(0, 10, 0)  -- Adjust the height above the head
+        billboardGui.AlwaysOnTop = true  -- Display above all other GUI elements, including walls
 
-    textLabel.Parent = billboardGui
-    billboardGui.Parent = rakeModel
+        local textLabel = Instance.new("TextLabel")
+        textLabel.Name = "ESPTextLabel"
+        textLabel.Size = UDim2.new(1, 0, 1, 0)
+        textLabel.TextColor3 = Color3.new(1, 1, 1)  -- Bright white color
+        textLabel.BackgroundTransparency = 1
+        textLabel.Font = Enum.Font.SourceSansBold  -- Optional: Set font to bold
+
+        textLabel.Parent = billboardGui
+        billboardGui.Parent = rakeModel
+    end
+
+    local textLabel = billboardGui:FindFirstChild("ESPTextLabel")
+    if textLabel then
+        textLabel.Text = string.format("Rake\n%.1f meters away\nHealth: %d", distance, health)
+    end
 end
 
 -- Function to calculate the distance between two points
@@ -26,8 +36,8 @@ local function calculateDistance(point1, point2)
     return (point1 - point2).Magnitude
 end
 
--- Function to check for the presence of the "Rake" model in Workspace and add a TextLabel
-local function findAndAddTextLabelAboveRakeModel(playerPosition)
+-- Function to check for the presence of the "Rake" model in Workspace and update the TextLabel
+local function findAndUpdateTextLabelAboveRakeModel(playerPosition)
     local rakeModel = Workspace:FindFirstChild("Rake")
 
     if rakeModel then
@@ -41,7 +51,7 @@ local function findAndAddTextLabelAboveRakeModel(playerPosition)
             health = humanoid.Health
         end
 
-        addTextLabelAboveRakeModel(rakeModel, distance, health)
+        updateTextLabelAboveRakeModel(rakeModel, distance, health)
         StarterGui:SetCore("SendNotification", {
             Title = "ESP Activated!",
             Text = string.format("The 'Rake' model was found. Distance: %.1f meters", distance),
@@ -64,13 +74,13 @@ local isESPActive = true
 -- Reference to the LocalPlayer for distance calculation
 local player = Players.LocalPlayer
 
--- Loop to continuously check and add a TextLabel above the "Rake" model's head
+-- Loop to continuously check and update the TextLabel above the "Rake" model's head
 while isESPActive do
     local playerPosition = player.Character and player.Character:WaitForChild("HumanoidRootPart").Position or Vector3.new()
     
-    if not findAndAddTextLabelAboveRakeModel(playerPosition) then
+    if not findAndUpdateTextLabelAboveRakeModel(playerPosition) then
         wait(1)  -- Adjust the wait time as needed to avoid excessive checks and reduce performance impact
     else
-        wait(0.4)  -- Wait before refreshing the distance
+        wait(1)  -- Wait before refreshing the distance
     end
 end
