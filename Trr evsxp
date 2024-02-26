@@ -236,6 +236,21 @@ end
 end
 })
 
+game:GetService("RunService").Heartbeat:Connect(function()
+    if isESPActive then
+        local playerPosition = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+        if playerPosition then
+            playerPosition = playerPosition.Position
+            findAndUpdateTextLabelAboveRakeModel(playerPosition)
+        end
+    end
+end)
+
+
+
+
+
+
 Main:AddButton({
     Name = "Infinite Stamina",
     Callback = function (Value)
