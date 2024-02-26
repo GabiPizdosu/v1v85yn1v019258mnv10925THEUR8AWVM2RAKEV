@@ -3,7 +3,7 @@ local Window = OrionLib:MakeWindow({Name = "da reik", HidePremium = false, SaveC
 
 --values
 _G.InfStamina = true
-_G.AlwaysDay = true
+
 
 --functions--
 function hookInfiniteStamina()
@@ -68,7 +68,7 @@ end
 
 -- tabs--
 local Main = Window:MakeTab({
-  Name = "Test",
+  Name = "Main",
   Icon = "rbxassetid://4483345998",
   PremiumOnly = false
 })
@@ -86,15 +86,6 @@ local PointsGiver = Window:MakeTab({
 })
 
 -- toggles--
-Main:AddToggle({
-Name = "Always day",
-Default = false,
-Callback = function (Value)
-      _G.AlwaysDay = Value
-        updateVisualsToAlwaysDay()
-    end
-    })
-
 Main:AddToggle({
 Name = "Infinite Stamina",
 Default = false,
