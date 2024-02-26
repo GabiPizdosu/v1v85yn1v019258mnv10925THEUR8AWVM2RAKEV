@@ -21,7 +21,7 @@ rakeTextLabel.Parent = rakeBillboardGui
 
 -- Function to update the TextLabel above the "Rake" model
 local function updateRakeTextLabel(rakeModel, distance, health, targetVal)
-    rakeTextLabel.Text = string.format("Rake\n%.1f meters away\nHealth: %d\nTarget: %s", distance, health, targetVal)
+    rakeTextLabel.Text = string.format("Rake\n%.1f meters away\nHealth: %d\nTarget: %s", distance, health, "Target: " .. targetVal)
     rakeBillboardGui.Adornee = rakeModel.PrimaryPart
     rakeBillboardGui.Parent = rakeModel
 end
@@ -36,8 +36,8 @@ local function findAndUpdateTextLabelAboveRakeModel(playerPosition)
     local rakeModel = Workspace:FindFirstChild("Rake")
 
     if rakeModel then
-        local rakePosition = rakeModel.PrimaryPart.Position
-        local distance = calculateDistance(playerPosition, rakePosition)
+        local rakePosition = rakeModel.PrimaryPart and rakeModel.PrimaryPart.Position
+        local distance = rakePosition and calculateDistance(playerPosition, rakePosition) or 0
 
         -- If the model has a Humanoid, get its health
         local health = 0
