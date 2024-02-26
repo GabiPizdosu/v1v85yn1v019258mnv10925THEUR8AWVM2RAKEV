@@ -27,31 +27,27 @@ end
 local Workspace = game:GetService("Workspace")
 local RunService = game:GetService("RunService")
 
--- Function to highlight a model with red color
-local function highlightModel(model)
-    for _, part in pairs(model:GetDescendants()) do
-        if part:IsA("BasePart") then
-            part.BrickColor = BrickColor.new("Bright red")
-        end
-    end
-end
-
--- Function to check for the presence of the "Rake" model in Workspace
+-- Function to check for the presence of the "Rake" model in Workspace and highlight it with red color
 local function findAndHighlightRakeModel()
     local rakeModel = Workspace:FindFirstChild("Rake")
 
     if rakeModel then
-        highlightModel(rakeModel)
-        return true  -- Model found , exit the loop
+        for _, part in pairs(rakeModel:GetDescendants()) do
+            if part:IsA("BasePart") then
+                part.BrickColor = BrickColor.new("Bright red")  -- Highlight in red
+            end
+        end
+        return true  -- Model found, exit the loop
     end
 
-    return false -- Model not found , continue the loop
+    return false  -- Model not found, continue the loop
 end
 
 -- Loop to continuously check and highlight the "Rake" model
 while not findAndHighlightRakeModel() do
-    wait(2.5)  -- Adjust the wait time as needed to avoid excessive checks and reduce performance impact
+    wait(1)  -- Adjust the wait time as needed to avoid excessive checks and reduce performance impact
 end
+
 -- END OF RAKE ESP --
 
 
@@ -106,7 +102,10 @@ PointsGiver:AddButton({
     end
 })
 
-
-OrionLib:init()
-
-
+ESP:AddButton({
+  Name = "Activate Rake Esp (cannot turn off)",
+  Callback = function(findAndHighlightRakeModel)
+    end
+})
+--no more buttons from here--
+OrionLib:Init()
