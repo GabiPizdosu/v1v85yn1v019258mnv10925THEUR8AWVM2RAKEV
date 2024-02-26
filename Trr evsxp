@@ -1,5 +1,5 @@
 local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
-local Window = OrionLib:MakeWindow({Name = "da reik", HidePremium = false, SaveConfig = false,IntroText = "The Rake Remastered" , ConfigFolder = "da reik config"})
+local Window = OrionLib:MakeWindow({Name = "The Rake Remastered", HidePremium = false, SaveConfig = false,IntroText = "The Rake Remastered" , ConfigFolder = "da reik config"})
 
 --values
 _G.InfStamina = true
@@ -13,7 +13,7 @@ function hookInfiniteStamina()
       local module = require(v)
       local old; old = hookfunction(module.TakeStamina, function(smth, amount)
         if amount > 0 then return old(smth, -0.5) end 
-      
+
         return old(smth, amount)
       end)
     end
