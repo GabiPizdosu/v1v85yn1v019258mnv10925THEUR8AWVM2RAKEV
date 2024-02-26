@@ -66,9 +66,11 @@ local player = Players.LocalPlayer
 
 -- Loop to continuously check and add a TextLabel above the "Rake" model's head
 while isESPActive do
-    if not findAndAddTextLabelAboveRakeModel(player.Character and player.Character:WaitForChild("HumanoidRootPart").Position or Vector3.new()) then
+    local playerPosition = player.Character and player.Character:WaitForChild("HumanoidRootPart").Position or Vector3.new()
+    
+    if not findAndAddTextLabelAboveRakeModel(playerPosition) then
         wait(1)  -- Adjust the wait time as needed to avoid excessive checks and reduce performance impact
     else
-        isESPActive = false  -- Stop the loop when the model is found
+        wait(0.4)  -- Wait before refreshing the distance
     end
 end
