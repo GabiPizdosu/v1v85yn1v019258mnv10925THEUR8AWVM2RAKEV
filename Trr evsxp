@@ -33,7 +33,6 @@ end
 local function checkFlareGunPickup()
     while _G.FlareGunEsp do
         local flareGunPickup = Workspace:FindFirstChild("FlareGunPickUp")
-
         if flareGunPickup then
             local flareGunHighlight = flareGunPickup:FindFirstChild("FlareGunHighlight")
             local flareGunBillboard = flareGunPickup:FindFirstChild("FlareGunBillboardGui")
