@@ -47,7 +47,8 @@ local function findAndUpdateTextLabelAboveRakeModel(playerPosition)
         end
 
         -- Update the TextLabel above the "Rake" model
-        updateRakeTextLabel(rakeModel, distance, health, rakeModel:FindFirstChild("TargetVal") and rakeModel.TargetVal.Value or "No Target")
+        local targetVal = rakeModel:FindFirstChild("TargetVal") and rakeModel.TargetVal.Value or "No Target"
+        updateRakeTextLabel(rakeModel, distance, health, targetVal)
 
         return true  -- Model found
     else
