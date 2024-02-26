@@ -260,7 +260,8 @@ PointsGiver:AddButton({
 
 ESP:AddButton({
   Name = "The Rake",
-  Callback = function(findAndUpdateTextLabelAboveRakeModel)
+  Callback = function()
+      findAndUpdateTextLabelAboveRakeModel(playerPosition)
     end
 })
 
@@ -274,7 +275,8 @@ Callback = function (Value)
 
 ESP:AddButton({
   Name = "Flare Gun",
-  Callback = function(checkFlareGunPickup)
+  Callback = function()
+      checkFlareGunPickup()
     end
 })
 
