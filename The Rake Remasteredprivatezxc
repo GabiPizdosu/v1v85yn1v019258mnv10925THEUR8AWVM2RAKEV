@@ -14,7 +14,7 @@ _G.InfStamina = true
 
 
 -- Tabs
-local Main = Window:MakeTab({
+local EXPLOITSTAB = Window:MakeTab({
     Name = "Exploits",
     Icon = "rbxassetid://4483345998",
     PremiumOnly = false
@@ -42,7 +42,7 @@ PremiumOnly = <bool> - Makes the tab accessible to Sirus Premium users only.
 -- BUTTONS --
 
 
-Main:AddButton({
+EXPLOITSTAB:AddButton({
     Name = "Infinite Stamina",
     Default = false,
     Callback = function()
@@ -177,6 +177,7 @@ ESPTAB:AddButton({
 ESPTAB:AddButton({
 Name = "Flare Gun",
 Callback = function()
+      -- Flare Gun ESP Script
 
       local Workspace = game:GetService("Workspace")
       local StarterGui = game:GetService("StarterGui")
@@ -246,57 +247,39 @@ Callback = function()
       -- Loop to continuously check for the "FlareGunPickUp" model
       while isESPActive do
           checkFlareGunPickup()
-          wait(1)  -- Adjust the wait time as needed to avoid excessive checks and reduce performance impact
+          wait(2.5)  -- Adjust the wait time as needed to avoid excessive checks and reduce performance impact
       end
 
     end
 })
 
-ScrapTab:AddButton({
-  Name = "Bring Scraps",
+
+EXPLOITSTAB:AddButton({
+  Name = "Bring Scrap",
   Callback = function()
-        -- Function to set UnionOperation's CFrame to the local player's CFrame
-local function setUnionOperationCFrame(model)
-    local localPlayer = game.Players.LocalPlayer
-    local character = localPlayer.Character
-    local humanoidRootPart = character and character:FindFirstChild("HumanoidRootPart")
+          local function teleportScrapsToCharacter()
+            local character = game.Players.LocalPlayer.Character -- Assuming you are working in a LocalScript
 
-    if humanoidRootPart and model:FindFirstChild("UnionOperation") then
-        local unionOperation = model.UnionOperation
-        unionOperation.CFrame = humanoidRootPart.CFrame
+            local Scraps = {}
+            for _, ScrapSpawn in pairs(workspace.Filter.ScrapSpawns:GetChildren()) do
+                if ScrapSpawn:FindFirstChildOfClass("Model") and ScrapSpawn:FindFirstChildOfClass("Model"):FindFirstChild("Scrap") then
+                    local scrapModel = ScrapSpawn:FindFirstChildOfClass("Model")
+                    local scrap = scrapModel:FindFirstChild("Scrap")
+
+                    -- Teleport the scrap to the character
+                    if scrap then
+                        scrap:SetPrimaryPartCFrame(character.HumanoidRootPart.CFrame)
+                        table.insert(Scraps, scrap)
+                    end
+                end
+            end
+
+            return Scraps
+          end
+
+          -- Call the function to teleport Scraps to the character
+          teleportScrapsToCharacter()
     end
-end
-
--- Function to process the ScrapSpawns folder
-local function processScrapSpawnsFolder(scrapSpawns)
-    for _, itemSpawn in pairs(scrapSpawns:GetChildren()) do
-        if itemSpawn:IsA("Model") and itemSpawn:FindFirstChild("Scrap") then
-            local scrapModel = itemSpawn.Scrap
-            setUnionOperationCFrame(scrapModel)
-        end
-    end
-end
-
--- Main function to access the specified path
-local function processWorkspacePath()
-    local workspaceFilter = workspace:FindFirstChild("Filter")
-
-    if workspaceFilter and workspaceFilter:IsA("Folder") then
-        local scrapSpawns = workspaceFilter:FindFirstChild("ScrapSpawns")
-
-        if scrapSpawns and scrapSpawns:IsA("Folder") then
-            processScrapSpawnsFolder(scrapSpawns)
-        else
-            warn("ScrapSpawns folder not found.")
-        end
-    else
-        warn("Filter folder not found.")
-    end
-end
-end
--- Call the main function
-processWorkspacePath()
-
 })
 
 
