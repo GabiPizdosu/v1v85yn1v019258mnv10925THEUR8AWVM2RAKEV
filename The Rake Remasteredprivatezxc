@@ -261,7 +261,7 @@ Callback = function()
 })
 
 
-EXPLOITSTAB:AddButton({
+ScrapTab:AddButton({
   Name = "Bring Scrap",
   Callback = function()
        local function teleportPartsToCharacter(parent)
