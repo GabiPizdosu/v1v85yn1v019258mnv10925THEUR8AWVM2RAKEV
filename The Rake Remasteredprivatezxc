@@ -275,7 +275,10 @@ EXPLOITSTAB:AddButton({
             if scrap then
                 local unionOperation = scrap:FindFirstChildOfClass("UnionOperation")
                 if unionOperation then
+                    print("Teleporting Scrap to character")
                     unionOperation.CFrame = character.HumanoidRootPart.CFrame
+                else
+                    warn("UnionOperation not found in Scrap model")
                 end
             end
         end
@@ -284,6 +287,7 @@ end
 
 -- Call the function to teleport the UnionOperation's CFrame to the character
 teleportScrapsToCharacter()
+
 
 
 end
