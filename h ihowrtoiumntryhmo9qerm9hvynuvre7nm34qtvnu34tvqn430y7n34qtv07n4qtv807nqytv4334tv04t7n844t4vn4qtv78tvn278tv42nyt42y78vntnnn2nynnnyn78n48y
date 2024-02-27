@@ -1,15 +1,18 @@
-
+-- Put this script in StarterGui
 local player = game.Players.LocalPlayer
-local gui = player.PlayerGui
-local mobilegui = gui.mobilegui
 
+local gui = Instance.new("ScreenGui")
+gui.Parent = player.PlayerGui
 
-local textLabel = Instance.new("Mobtrap on top")
-textLabel.Name = "MyTextLabel"
-textLabel.Text = "test"
-textLabel.Size = UDim2.new(0.5, 0, 0.1, 0)
-textLabel.Position = UDim2.new(0.25, 0, 0.45, 0)
-textLabel.TextSize = 24
-textLabel.TextColor3 = Color3.new(0, 0, 138)
+local frame = Instance.new("Frame")
+frame.Position = UDim2.new(0, 0, 0, 0)
+frame.Size = UDim2.new(1, 0, 0, 50)
+frame.Parent = gui
 
-textLabel.Parent = mobilegui
+local textLabel = Instance.new("TextLabel")
+textLabel.Position = UDim2.new(0, 0, 0, 0)
+textLabel.Size = UDim2.new(1, 0, 1, 0)
+textLabel.Text = "Your Text Here"
+textLabel.TextColor3 = Color3.new(1, 1, 1)
+textLabel.BackgroundColor3 = Color3.new(0, 0, 0)
+textLabel.Parent = frame
