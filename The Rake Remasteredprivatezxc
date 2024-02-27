@@ -15,7 +15,7 @@ _G.InfStamina = true
 
 -- Tabs
 local Main = Window:MakeTab({
-    Name = "Main",
+    Name = "Exploits",
     Icon = "rbxassetid://4483345998",
     PremiumOnly = false
 })
@@ -26,6 +26,17 @@ local ESPTAB = Window:MakeTab({
     PremiumOnly = false
 })
 
+local ScrapTab = Window:MakeTab({
+  Name = "Scrap",
+  Icon = "rbxassetid://4483345998",
+  PremiumOnly = false
+})
+
+--[[
+Name = <string> - The name of the tab.
+Icon = <string> - The icon of the tab.
+PremiumOnly = <bool> - Makes the tab accessible to Sirus Premium users only.
+]]
 
 
 -- BUTTONS --
@@ -242,6 +253,39 @@ Callback = function()
     end
 })
 
+ScrapTab:AddButton({
+  Name = "Bring Scraps",
+  Callback = function()
+          -- Assuming you have a variable 'character' representing your player's character
+          local player = game.Players.LocalPlayer
+          local character = player.Character or player.CharacterAdded:Wait()
+
+          -- Iterate through each ItemSpawn
+          for _, itemSpawn in pairs(workspace.Filter.ScrapSpawns:GetChildren()) do
+              if itemSpawn:IsA("Part") and itemSpawn.Name:match("ItemSpawn%d+") then
+                  -- Extract the number from the ItemSpawn name
+                  local itemSpawnNumber = tonumber(itemSpawn.Name:match("ItemSpawn(%d+)"))
+
+                  -- Access the Scrap model inside each ItemSpawn
+                  local scrapModel = itemSpawn:FindFirstChild("Scrap" .. itemSpawnNumber)
+                  if scrapModel and scrapModel:IsA("Model") then
+                      -- Iterate through each child of the Scrap model
+                      for _, scrapChild in pairs(scrapModel:GetChildren()) do
+                          -- Extract the number from the Scrap child name
+                          local scrapNumber = tonumber(scrapChild.Name:match("Scrap(%d+)"))
+
+                          -- Check if the child is a UnionOperation
+                          if scrapChild:IsA("UnionOperation") then
+                              -- Teleport the entire Scrap model to the player's character
+                              scrapModel:SetPrimaryPartCFrame(character.HumanoidRootPart.CFrame)
+                          end
+                      end
+                  end
+              end
+          end
+
+    end    
+})
 
 
 
