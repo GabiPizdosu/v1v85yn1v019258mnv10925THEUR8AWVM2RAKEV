@@ -157,7 +157,7 @@ ESPTAB:AddButton({
           if not findAndUpdateTextLabelAboveRakeModel(playerPosition) then
               wait(2.5)  -- Adjust the wait time as needed to avoid excessive checks and reduce performance impact
           else
-              wait(0.3)  -- Wait before refreshing the distance
+              wait(0.020)  -- Wait before refreshing the distance
           end
       end
     end    
