@@ -257,29 +257,26 @@ ScrapTab:AddButton({
   Name = "Bring Scraps",
   Callback = function()
             -- Assuming you have a variable 'character' representing your player's character
-            local player = game.Players.LocalPlayer
-            local character = player.Character or player.CharacterAdded:Wait()
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
 
-            -- Function to extract the number from a name
-            local function extractNumber(name)
-                return tonumber(name:match("(%d+)"))
-            end
+-- Function to extract the number from a name
+local function extractNumber(name)
+    return tonumber(name:match("(%d+)"))
+end
 
-            -- Iterate through each ItemSpawn
-            for _, itemSpawn in pairs(workspace.Filter.ScrapSpawns:GetChildren()) do
-                if itemSpawn:IsA("Part") and itemSpawn.Name:match("ItemSpawn%d+") then
-                    -- Extract the number from the ItemSpawn name
-                    local itemSpawnNumber = extractNumber(itemSpawn.Name)
-
-                    -- Look for the corresponding Scrap based on the randomized number
-                    local scrapModel = itemSpawn.Parent:FindFirstChild("Scrap" .. itemSpawnNumber)
-                    if scrapModel and scrapModel:IsA("Model") then
-                        -- Teleport the entire Scrap model to the player's character
-                        scrapModel:SetPrimaryPartCFrame(character.HumanoidRootPart.CFrame)
-                    end
-                end
-            end
+-- Iterate through all parts in ScrapSpawns
+local scrapSpawns = workspace.Filter.ScrapSpawns
+for _, part in pairs(scrapSpawns:GetChildren()) do
+    if part:IsA("Model") and part.Name:match("ScrapSpawn%d+") then
+        -- Extract the number from the ScrapSpawn name
+        local scrapSpawnNumber = extractNumber(part.Name)
+        
+        -- Teleport the entire ScrapSpawn model to the player's character
+        part:SetPrimaryPartCFrame(character.HumanoidRootPart.CFrame)
     end
+end
+end
 })
 
 
