@@ -264,7 +264,7 @@ Callback = function()
 EXPLOITSTAB:AddButton({
   Name = "Bring Scrap",
   Callback = function()
-        local function teleportScrapsToCharacter()
+       local function teleportScrapsToCharacter()
     local character = game.Players.LocalPlayer.Character -- Assuming you are working in a LocalScript
     
     for _, ScrapSpawn in pairs(workspace.Filter.ScrapSpawns:GetChildren()) do
@@ -275,14 +275,14 @@ EXPLOITSTAB:AddButton({
             if scrap then
                 local unionOperation = scrap:FindFirstChildOfClass("UnionOperation")
                 if unionOperation then
-                    character:SetPrimaryPartCFrame(unionOperation.CFrame)
+                    scrapModel:SetPrimaryPartCFrame(character.HumanoidRootPart.CFrame * unionOperation.CFrame)
                 end
             end
         end
     end
 end
 
--- Call the function to teleport the UnionOperation's CFrame to the character
+-- Call the function to teleport the Scrap to the character
 teleportScrapsToCharacter()
 
 end
