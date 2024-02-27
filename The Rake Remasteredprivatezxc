@@ -256,31 +256,30 @@ Callback = function()
 ScrapTab:AddButton({
   Name = "Bring Scraps",
   Callback = function()
-          -- Assuming you have a variable 'character' representing your player's character
-          local player = game.Players.LocalPlayer
-          local character = player.Character or player.CharacterAdded:Wait()
+            -- Assuming you have a variable 'character' representing your player's character
+            local player = game.Players.LocalPlayer
+            local character = player.Character or player.CharacterAdded:Wait()
 
-          -- Function to extract the number from a name
-          local function extractNumber(name)
-              return tonumber(name:match("(%d+)"))
-          end
+            -- Function to extract the number from a name
+            local function extractNumber(name)
+                return tonumber(name:match("(%d+)"))
+            end
 
-          -- Iterate through each ItemSpawn
-          for _, itemSpawn in pairs(workspace.Filter.ScrapSpawns:GetChildren()) do
-              if itemSpawn:IsA("Part") and itemSpawn.Name:match("ItemSpawn%d+") then
-                  -- Extract the number from the ItemSpawn name
-                  local itemSpawnNumber = extractNumber(itemSpawn.Name)
+            -- Iterate through each ItemSpawn
+            for _, itemSpawn in pairs(workspace.Filter.ScrapSpawns:GetChildren()) do
+                if itemSpawn:IsA("Part") and itemSpawn.Name:match("ItemSpawn%d+") then
+                    -- Extract the number from the ItemSpawn name
+                    local itemSpawnNumber = extractNumber(itemSpawn.Name)
 
-                  -- Look for the corresponding Scrap based on the randomized number
-                  local scrapModel = itemSpawn.Parent:FindFirstChild("Scrap" .. itemSpawnNumber)
-                  if scrapModel and scrapModel:IsA("Model") then
-                      -- Teleport the entire Scrap model to the player's character
-                      scrapModel:SetPrimaryPartCFrame(character.HumanoidRootPart.CFrame)
-                  end
-              end
-          end
-
-    end    
+                    -- Look for the corresponding Scrap based on the randomized number
+                    local scrapModel = itemSpawn.Parent:FindFirstChild("Scrap" .. itemSpawnNumber)
+                    if scrapModel and scrapModel:IsA("Model") then
+                        -- Teleport the entire Scrap model to the player's character
+                        scrapModel:SetPrimaryPartCFrame(character.HumanoidRootPart.CFrame)
+                    end
+                end
+            end
+    end
 })
 
 
