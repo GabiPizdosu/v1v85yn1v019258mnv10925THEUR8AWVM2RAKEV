@@ -1,111 +1,21 @@
--- Rake ESP Script
-
+-- Get the Players service
 local Players = game:GetService("Players")
-local Workspace = game:GetService("Workspace")
-local StarterGui = game:GetService("StarterGui")
 
--- Create the BillboardGui and TextLabel for "Rake"
-local billboardGui = Instance.new("BillboardGui")
-billboardGui.Size = UDim2.new(0, 200, 0, 100)
-billboardGui.StudsOffset = Vector3.new(0, 10, 0)
-billboardGui.AlwaysOnTop = true
-
-local textLabel = Instance.new("TextLabel")
-textLabel.Size = UDim2.new(1, 0, 1, 0)
-textLabel.TextColor3 = Color3.new(1, 1, 1)
-textLabel.BackgroundTransparency = 1
-textLabel.Font = Enum.Font.SourceSansBold
-
-textLabel.Parent = billboardGui
-
--- Create a SelectionBox to highlight the "Rake" model with blue color
-local selectionBox = Instance.new("SelectionBox")
-selectionBox.Color3 = Color3.new(0, 0, 1) -- Blue color
-selectionBox.Transparency = 0.5
-selectionBox.SurfaceTransparency = 0.5
-selectionBox.LineThickness = 0.05
-selectionBox.Adornee = Instance.new("Part") -- Adornee must be set to a non-nil value
-
--- Reference to the LocalPlayer for distance calculation
-local player = Players.LocalPlayer
-
--- Variable to check if "ESP Activated!" notification has been shown
-local isNotificationShown = false
-
--- Variable to check if "Searching..." notification has been shown
-local isSearchingNotificationShown = false
-
--- Timer variables
-local startTime = tick()
-local searchingNotificationDelay = 19028357  -- Delay in seconds
-
--- Function to calculate the distance between two points
-local function calculateDistance(point1, point2)
-    return (point1 - point2).Magnitude
-end
-
--- Function to check for the presence of the "Rake" model in Workspace and update the TextLabel
-local function findAndUpdateTextLabelAboveRakeModel(playerPosition)
-    local rakeModel = Workspace:FindFirstChild("Rake")
-
-    if rakeModel then
-        local rakePosition = rakeModel.PrimaryPart.Position
-        local distance = calculateDistance(playerPosition, rakePosition)
-
-        -- If the model has a Humanoid, get its health
-        local health = 0
-        local humanoid = rakeModel:FindFirstChildOfClass("Humanoid")
-        if humanoid then
-            health = humanoid.Health
-        end
-
-        textLabel.Text = string.format("Rake\n%.1f meters away\nHealth: %d", distance, health)
-        billboardGui.Adornee = rakeModel.PrimaryPart
-        billboardGui.Parent = rakeModel
-
-        -- Highlight the "Rake" model with a blue SelectionBox
-        selectionBox.Parent = rakeModel
-        selectionBox.Adornee = rakeModel.PrimaryPart
-
-        -- Show "ESP Activated!" notification if it hasn't been shown before
-        if not isNotificationShown then
-            StarterGui:SetCore("SendNotification", {
-                Title = "ESP Activated!",
-                Text = string.format("The 'Rake' model was found. Distance: %.1f meters", distance),
-                Duration = 5
-            })
-            isNotificationShown = true
-        end
-
-        return true  -- Model found
-    else
-        -- Remove the SelectionBox if the model is not found
-        selectionBox.Parent = nil
-
-        -- Show "Searching..." notification after the delay
-        if not isSearchingNotificationShown and tick() - startTime > searchingNotificationDelay then
-            StarterGui:SetCore("SendNotification", {
-                Title = "Searching...",
-                Text = "The 'Rake' model was not found. Retrying...",
-                Duration = 3
-            })
-            isSearchingNotificationShown = true
-        end
-
-        return false  -- Model not found
+-- Function to change HumanoidRootPart's Name to Username
+local function setHumanoidRootPartName(player)
+    local character = player.Character
+    if character then
+        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+        humanoidRootPart.Name = player.Name
     end
 end
 
--- Variable to control the loop
-local isESPActive = true
+-- Connect the function to each player's character added event
+Players.PlayerAdded:Connect(function(player)
+    setHumanoidRootPartName(player)
+end)
 
--- Loop to continuously check and update the TextLabel above the "Rake" model's head
-while isESPActive do
-    local playerPosition = player.Character and player.Character:WaitForChild("HumanoidRootPart").Position or Vector3.new()
-
-    if not findAndUpdateTextLabelAboveRakeModel(playerPosition) then
-        wait(1)  -- Adjust the wait time as needed to avoid excessive checks and reduce performance impact
-    else
-        wait(0.4)  -- Wait before refreshing the distance
-    end
+-- Loop through existing players and set the HumanoidRootPart's Name
+for _, player in pairs(Players:GetPlayers()) do
+    setHumanoidRootPartName(player)
 end
