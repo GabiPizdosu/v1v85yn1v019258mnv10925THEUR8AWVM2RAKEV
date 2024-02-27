@@ -254,35 +254,6 @@ Callback = function()
 })
 
 
-EXPLOITSTAB:AddButton({
-  Name = "Bring Scrap",
-  Callback = function()
-      local function teleportScrapsToCharacter()
-    local character = game.Players.LocalPlayer.Character -- Assuming you are working in a LocalScript
-    
-    local Scraps = {}
-    for _, ScrapSpawn in pairs(workspace.Filter.ScrapSpawns:GetChildren()) do
-        if ScrapSpawn:FindFirstChildOfClass("Model") and ScrapSpawn:FindFirstChildOfClass("Model"):FindFirstChild("Scrap") then
-            local scrapModel = ScrapSpawn:FindFirstChildOfClass("Model")
-            local scrap = scrapModel:FindFirstChild("Scrap")
-            
-            -- Teleport the scrap to the character
-            if scrap then
-                scrapModel:SetPrimaryPartCFrame(character.HumanoidRootPart.CFrame)
-                table.insert(Scraps, scrap)
-            end
-        end
-    end
-    
-    return Scraps
-end
-
--- Call the function to teleport Scraps to the character
-teleportScrapsToCharacter()
- end
-})
-
-
 
 
 
