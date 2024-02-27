@@ -1,11 +1,16 @@
 local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
 local Window = OrionLib:MakeWindow({Name = "The Rake Remastered", HidePremium = false, SaveConfig = false, IntroText = "The Rake Remastered", ConfigFolder = "da reik config"})
+
+-- variables
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
 local StarterGui = game:GetService("StarterGui")
 
 -- Values
 _G.InfStamina = true
+
+
+
 
 
 -- Tabs
@@ -245,6 +250,35 @@ Callback = function()
           wait(2.5)  -- Adjust the wait time as needed to avoid excessive checks and reduce performance impact
       end
 
+    end
+})
+
+
+EXPLOITSTAB:AddButton({
+  Name = "Bring Scrap",
+  Callback = function()
+    local function teleportScrapsToCharacter()
+        local character = game.Players.LocalPlayer.Character -- Assuming you are working in a LocalScript
+
+        local Scraps = {}
+        for _, ScrapSpawn in pairs(workspace.Filter.ScrapSpawns:GetChildren()) do
+            if ScrapSpawn:FindFirstChildOfClass("Model") and ScrapSpawn:FindFirstChildOfClass("Model"):FindFirstChild("Scrap") then
+                local scrapModel = ScrapSpawn:FindFirstChildOfClass("Model")
+                local scrap = scrapModel:FindFirstChild("Scrap")
+
+                -- Teleport the scrap to the character
+                if scrap then
+                    scrapModel:SetPrimaryPartCFrame(character.HumanoidRootPart.CFrame)
+                    table.insert(Scraps, scrap)
+                end
+            end
+        end
+
+        return Scraps
+      end
+
+      -- Call the function to teleport Scraps to the character
+      teleportScrapsToCharacter()
     end
 })
 
