@@ -278,7 +278,7 @@ local function processScrapSpawnsFolder(scrapSpawns)
 end
 
 -- Main function to access the specified path
-local function processWorkspacePath(path)
+local function processWorkspacePath()
     local workspaceFilter = workspace:FindFirstChild("Filter")
 
     if workspaceFilter and workspaceFilter:IsA("Folder") then
@@ -293,11 +293,10 @@ local function processWorkspacePath(path)
         warn("Filter folder not found.")
     end
 end
+end
+-- Call the main function
+processWorkspacePath()
 
--- Call the main function with the specified path
-processWorkspacePath("Workspace.Filter.ScrapSpawns")
-
-    end
 })
 
 
