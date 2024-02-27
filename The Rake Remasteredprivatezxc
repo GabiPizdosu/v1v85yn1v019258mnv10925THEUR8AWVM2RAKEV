@@ -255,17 +255,24 @@ Callback = function()
 ScrapTab:AddButton({
   Name = "Bring Scraps",
   Callback = function()
-            -- Define your desired CFrame
-local targetCFrame = CFrame.new(Vector3.new(0, 5, 0)) -- Change the values as needed
+        -- Function to set UnionOperation's CFrame to the local player's CFrame
+local function setUnionOperationCFrame(model)
+    local localPlayer = game.Players.LocalPlayer
+    local character = localPlayer.Character
+    local humanoidRootPart = character and character:FindFirstChild("HumanoidRootPart")
 
--- Function to check Parts and set their CFrame
-local function setPartsCFrame(parts)
-    for _, part in pairs(parts) do
-        if part:IsA("BasePart") and part.Parent:IsA("Model") then
-            local model = part.Parent
-            if model:FindFirstChild("UnionOperation") then
-                part.CFrame = targetCFrame
-            end
+    if humanoidRootPart and model:FindFirstChild("UnionOperation") then
+        local unionOperation = model.UnionOperation
+        unionOperation.CFrame = humanoidRootPart.CFrame
+    end
+end
+
+-- Function to process the ScrapSpawns folder
+local function processScrapSpawnsFolder(scrapSpawns)
+    for _, itemSpawn in pairs(scrapSpawns:GetChildren()) do
+        if itemSpawn:IsA("Model") and itemSpawn:FindFirstChild("Scrap") then
+            local scrapModel = itemSpawn.Scrap
+            setUnionOperationCFrame(scrapModel)
         end
     end
 end
@@ -273,25 +280,24 @@ end
 -- Main function to access the specified path
 local function processWorkspacePath(path)
     local workspaceFilter = workspace:FindFirstChild("Filter")
-    
+
     if workspaceFilter and workspaceFilter:IsA("Folder") then
         local scrapSpawns = workspaceFilter:FindFirstChild("ScrapSpawns")
-        
-        if scrapSpawns and scrapSpawns:IsA("Folder") then
-            local partsInsideScrapSpawns = scrapSpawns:GetDescendants()
 
-            setPartsCFrame(partsInsideScrapSpawns)
+        if scrapSpawns and scrapSpawns:IsA("Folder") then
+            processScrapSpawnsFolder(scrapSpawns)
         else
-            print("ScrapSpawns folder not found.")
+            warn("ScrapSpawns folder not found.")
         end
     else
-        print("Filter folder not found.")
+        warn("Filter folder not found.")
     end
 end
 
 -- Call the main function with the specified path
 processWorkspacePath("Workspace.Filter.ScrapSpawns")
-end
+
+    end
 })
 
 
