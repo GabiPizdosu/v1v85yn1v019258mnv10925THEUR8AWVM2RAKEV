@@ -13,6 +13,13 @@ _G.InfStamina = true
 
 
 
+
+
+
+
+
+
+
 -- Tabs
 local EXPLOITSTAB = Window:MakeTab({
     Name = "Exploits",
@@ -257,29 +264,27 @@ Callback = function()
 EXPLOITSTAB:AddButton({
   Name = "Bring Scrap",
   Callback = function()
-    local function teleportScrapsToCharacter()
-        local character = game.Players.LocalPlayer.Character -- Assuming you are working in a LocalScript
+        local function teleportScrapsToCharacter()
+          local character = game.Players.LocalPlayer.Character -- Assuming you are working in a LocalScript
 
-        local Scraps = {}
-        for _, ScrapSpawn in pairs(workspace.Filter.ScrapSpawns:GetChildren()) do
-            if ScrapSpawn:FindFirstChildOfClass("Model") and ScrapSpawn:FindFirstChildOfClass("Model"):FindFirstChild("Scrap") then
-                local scrapModel = ScrapSpawn:FindFirstChildOfClass("Model")
-                local scrap = scrapModel:FindFirstChild("Scrap")
+          for _, ScrapSpawn in pairs(workspace.Filter.ScrapSpawns:GetChildren()) do
+              if ScrapSpawn:IsA("Part") then
+                  local scrapModel = ScrapSpawn:FindFirstChildOfClass("Model")
+                  local scrap = scrapModel and scrapModel:FindFirstChild("Scrap")
 
-                -- Teleport the scrap to the character
-                if scrap then
-                    scrapModel:SetPrimaryPartCFrame(character.HumanoidRootPart.CFrame)
-                    table.insert(Scraps, scrap)
-                end
-            end
+                  if scrap then
+                      local unionOperation = scrap:FindFirstChildOfClass("UnionOperation")
+                      if unionOperation then
+                          character:SetPrimaryPartCFrame(unionOperation.CFrame * CFrame.new(scrapModel.Position))
+                      end
+                  end
+              end
+          end
         end
 
-        return Scraps
-      end
-
-      -- Call the function to teleport Scraps to the character
-      teleportScrapsToCharacter()
-    end
+        -- Call the function to teleport the UnionOperation's CFrame to the character
+        teleportScrapsToCharacter()
+end
 })
 
 
