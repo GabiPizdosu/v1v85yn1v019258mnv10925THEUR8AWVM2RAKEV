@@ -1,7 +1,7 @@
 
-local player = game.Players.LocalPlayer
-local gui = player.PlayerGui
-local mobileGui = gui.MobileGui
+local PLAYA = game.Players.LocalPlayer
+local test1 = PLAYA.PlayerGui
+local test2 = test1.test1
 
 
 local textLabel = Instance.new("Mobtrap on top")
@@ -12,5 +12,4 @@ textLabel.Position = UDim2.new(0.25, 0, 0.45, 0)
 textLabel.TextSize = 24
 textLabel.TextColor3 = Color3.new(0, 0, 138)
 
--- Add the TextLabel to the MobileGui
-textLabel.Parent = mobileGui
+textLabel.Parent = test2
