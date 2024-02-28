@@ -1,9 +1,276 @@
-local function teleportPartsToCharacter(parent)
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+local Window = OrionLib:MakeWindow({Name = "The Rake Remastered", HidePremium = false, SaveConfig = false, IntroText = "The Rake Remastered", ConfigFolder = "da reik config"})
+
+-- variables
+local Players = game:GetService("Players")
+local Workspace = game:GetService("Workspace")
+local StarterGui = game:GetService("StarterGui")
+
+-- Values
+_G.InfStamina = true
+
+
+
+
+
+
+
+
+
+
+
+
+-- Tabs
+local EXPLOITSTAB = Window:MakeTab({
+    Name = "Exploits",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+local ESPTAB = Window:MakeTab({
+    Name = "ESP",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+local ScrapTab = Window:MakeTab({
+  Name = "Scrap",
+  Icon = "rbxassetid://4483345998",
+  PremiumOnly = false
+})
+
+local CommandsTab = Window:MakeTab({
+  Name = "Script",
+  Icon = "rbxassetid://4483345998",
+  PremiumOnly = false
+})
+
+
+
+
+-- BUTTONS --
+
+
+EXPLOITSTAB:AddButton({
+    Name = "Infinite Stamina",
+    Default = false,
+    Callback = function()
+          while _G.InfStamina == true do
+              for _, v in pairs(getloadedmodules()) do
+                  if v.Name == "M_H" then
+                      local module = require(v)
+                      local old; old = hookfunction(module.TakeStamina, function(smth, amount)
+                          if amount > 0 then return old(smth, -0.5) end
+                          return old(smth, amount)
+                      end)
+                  end
+                  wait(0.02)
+              end
+          end
+      end
+})
+
+ESPTAB:AddButton({
+  Name = "rake esp",
+  Callback = function()
+      -- Rake ESP Script
+
+      -- Create the BillboardGui and TextLabel for "Rake"
+      local billboardGui = Instance.new("BillboardGui")
+      billboardGui.Size = UDim2.new(0, 200, 0, 100)
+      billboardGui.StudsOffset = Vector3.new(0, 10, 0)
+      billboardGui.AlwaysOnTop = true
+
+      local textLabel = Instance.new("TextLabel")
+      textLabel.Size = UDim2.new(1, 0, 1, 0)
+      textLabel.TextColor3 = Color3.new(1, 1, 1)
+      textLabel.BackgroundTransparency = 1
+      textLabel.Font = Enum.Font.SourceSansBold
+
+      textLabel.Parent = billboardGui
+
+      -- Create a SelectionBox to highlight the "Rake" model with blue color
+      local selectionBox = Instance.new("SelectionBox")
+      selectionBox.Color3 = Color3.new(0, 0, 1) -- Blue color
+      selectionBox.Transparency = 0.5
+      selectionBox.SurfaceTransparency = 0.5
+      selectionBox.LineThickness = 0.05
+      selectionBox.Adornee = Instance.new("Part") -- Adornee must be set to a non-nil value
+
+      -- Reference to the LocalPlayer for distance calculation
+      local player = Players.LocalPlayer
+
+      -- Variable to check if "ESP Activated!" notification has been shown
+      local isNotificationShown = false
+
+      -- Variable to check if "Searching..." notification has been shown
+      local isSearchingNotificationShown = false
+
+      -- Timer variables
+      local startTime = tick()
+      local searchingNotificationDelay = 20  -- Delay in seconds
+
+      -- Function to calculate the distance between two points
+      local function calculateDistance(point1, point2)
+          return (point1 - point2).Magnitude
+      end
+
+      -- Function to check for the presence of the "Rake" model in Workspace and update the TextLabel
+      local function findAndUpdateTextLabelAboveRakeModel(playerPosition)
+          local rakeModel = Workspace:FindFirstChild("Rake")
+
+          if rakeModel then
+              local rakePosition = rakeModel.PrimaryPart.Position
+              local distance = calculateDistance(playerPosition, rakePosition)
+
+              -- If the model has a Humanoid, get its health
+              local health = 0
+              local humanoid = rakeModel:FindFirstChildOfClass("Humanoid")
+              if humanoid then
+                  health = humanoid.Health
+              end
+
+              textLabel.Text = string.format("Rake\n%.1f meters away\nHealth: %d", distance, health)
+              billboardGui.Adornee = rakeModel.PrimaryPart
+              billboardGui.Parent = rakeModel
+
+              -- Highlight the "Rake" model with a blue SelectionBox
+              selectionBox.Parent = rakeModel
+              selectionBox.Adornee = rakeModel.PrimaryPart
+
+              -- Show "ESP Activated!" notification if it hasn't been shown before
+              if not isNotificationShown then
+                  StarterGui:SetCore("SendNotification", {
+                      Title = "ESP Activated!",
+                      Text = string.format("The 'Rake' model was found. Distance: %.1f meters", distance),
+                      Duration = 5
+                  })
+                  isNotificationShown = true
+              end
+
+              return true  -- Model found
+          else
+              -- Remove the SelectionBox if the model is not found
+              selectionBox.Parent = nil
+
+              -- Show "Searching..." notification after the delay
+              if not isSearchingNotificationShown and tick() - startTime > searchingNotificationDelay then
+                  StarterGui:SetCore("SendNotification", {
+                      Title = "Searching...",
+                      Text = "The 'Rake' model was not found. Retrying...",
+                      Duration = 3
+                  })
+                  isSearchingNotificationShown = true
+              end
+
+              return false  -- Model not found
+          end
+      end
+
+      -- Variable to control the loop
+      local isESPActive = true
+
+      -- Loop to continuously check and update the TextLabel above the "Rake" model's head
+      while isESPActive do
+          local playerPosition = player.Character and player.Character:WaitForChild("HumanoidRootPart").Position or Vector3.new()
+
+          if not findAndUpdateTextLabelAboveRakeModel(playerPosition) then
+              wait(2.5)  -- Adjust the wait time as needed to avoid excessive checks and reduce performance impact
+          else
+              wait(0.3)  -- Wait before refreshing the distance
+          end
+      end
+    end    
+})
+
+ESPTAB:AddButton({
+Name = "Flare Gun",
+Callback = function()
+      -- Flare Gun ESP Script
+
+      local Workspace = game:GetService("Workspace")
+      local StarterGui = game:GetService("StarterGui")
+
+      -- Function to check for the presence of the "FlareGunPickUp" model and send a notification when it spawns
+      local function checkFlareGunPickup()
+          local flareGunPickup = Workspace:FindFirstChild("FlareGunPickUp")
+
+          if flareGunPickup then
+              -- Highlight the "FlareGunPickUp" model with a red color and display a BillboardGui
+              local flareGunHighlight = flareGunPickup:FindFirstChild("FlareGunHighlight")
+              local flareGunBillboard = flareGunPickup:FindFirstChild("FlareGunBillboardGui")
+
+              if not flareGunHighlight then
+                  flareGunHighlight = Instance.new("SelectionBox")
+                  flareGunHighlight.Color3 = Color3.new(1, 0, 0) -- Red color
+                  flareGunHighlight.Transparency = 0.5
+                  flareGunHighlight.SurfaceTransparency = 0.5
+                  flareGunHighlight.LineThickness = 0.05
+                  flareGunHighlight.Name = "FlareGunHighlight"
+                  flareGunHighlight.Parent = flareGunPickup
+              end
+
+              if not flareGunBillboard then
+                  flareGunBillboard = Instance.new("BillboardGui")
+                  flareGunBillboard.Size = UDim2.new(0, 200, 0, 50)
+                  flareGunBillboard.StudsOffset = Vector3.new(0, 10, 0)
+                  flareGunBillboard.AlwaysOnTop = true
+
+                  local textLabel = Instance.new("TextLabel")
+                  textLabel.Size = UDim2.new(1, 0, 1, 0)
+                  textLabel.TextColor3 = Color3.new(1, 1, 1)
+                  textLabel.BackgroundTransparency = 1
+                  textLabel.Font = Enum.Font.SourceSansBold
+                  textLabel.Text = "Flare Gun"
+
+                  textLabel.Parent = flareGunBillboard
+
+                  flareGunBillboard.Name = "FlareGunBillboardGui"
+                  flareGunBillboard.Adornee = flareGunPickup
+                  flareGunBillboard.Parent = flareGunPickup
+              end
+
+              -- Send a notification if it hasn't been shown before
+              if not flareGunPickup:IsA("Model") or not flareGunPickup.Parent or flareGunPickup.Parent:IsA("Model") then
+                  return  -- Ignore if the FlareGunPickUp is not in a valid hierarchy
+              end
+
+              local flareGunNotificationShown = flareGunPickup:FindFirstChild("FlareGunNotificationShown")
+
+              if not flareGunNotificationShown then
+                  StarterGui:SetCore("SendNotification", {
+                      Title = "Flare Gun Spotted!",
+                      Text = "The 'FlareGunPickUp' model has spawned.",
+                      Duration = 5
+                  })
+                  flareGunNotificationShown = Instance.new("BoolValue")
+                  flareGunNotificationShown.Name = "FlareGunNotificationShown"
+                  flareGunNotificationShown.Parent = flareGunPickup
+              end
+          end
+      end
+
+      -- Variable to control the loop
+      local isESPActive = true
+
+      -- Loop to continuously check for the "FlareGunPickUp" model
+      while isESPActive do
+          checkFlareGunPickup()
+          wait(2.5)  -- Adjust the wait time as needed to avoid excessive checks and reduce performance impact
+      end
+
+    end
+})
+
+
+ScrapTab:AddButton({
+  Name = "Bring Scrap",
+  Callback = function()
+       local function teleportPartsToCharacter(parent)
     for _, child in pairs(parent:GetChildren()) do
         if child:IsA("Model") or child:IsA("Part") then
             teleportPartsToCharacter(child)
         elseif child:IsA("UnionOperation") then
-            print("Teleporting to character")
             child.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
         end
     end
@@ -12,4 +279,41 @@ end
 local ScrapSpawnFolder = workspace.Filter.ScrapSpawns
 
 teleportPartsToCharacter(ScrapSpawnFolder)
+  end
 
+ScrapTab:AddButton({
+        Name = "Sell Scrap For Many points (use while in shop)",
+        Callback = function()
+            function executeTask()
+              local args = {
+                [1] = "SellScraps",
+                [2] = "Scraps"
+            }
+
+            game:GetService("ReplicatedStorage").ShopEvent:FireServer(unpack(args))
+
+            end
+
+            for i = 1, 200 do
+                executeTask()
+            end
+          end    
+      })
+
+
+
+
+
+      
+    
+
+
+
+
+})
+
+
+
+
+
+OrionLib:Init()
