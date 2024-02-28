@@ -13,11 +13,11 @@ frame.Parent = screenGui
 
 -- Create TextLabel
 local textLabel = Instance.new("TextLabel")
-textLabel.Name = "MyTextLabel"
+textLabel.Name = "Timer"
 textLabel.Size = UDim2.new(0, 128, 0, 52)
 textLabel.Position = UDim2.new(0.391, 0, 0, 0)
 textLabel.BackgroundTransparency = 1
-textLabel.Text = "Hello, Roblox Lua!"
+textLabel.Text = "timer"
 textLabel.TextColor3 = Color3.new(1, 1, 1)
 textLabel.Font = Enum.Font.SourceSansBold
 textLabel.TextSize = 18
