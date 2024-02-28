@@ -269,7 +269,7 @@ ScrapTab:AddButton({
     end
 end
 
-local ScrapSpawnFolder = workspace.Filter.ScrapSpawns.ScrapSpawn
+local ScrapSpawnFolder = workspace.Filter.ScrapSpawns
 
 teleportPartsToCharacter(ScrapSpawnFolder)
 
