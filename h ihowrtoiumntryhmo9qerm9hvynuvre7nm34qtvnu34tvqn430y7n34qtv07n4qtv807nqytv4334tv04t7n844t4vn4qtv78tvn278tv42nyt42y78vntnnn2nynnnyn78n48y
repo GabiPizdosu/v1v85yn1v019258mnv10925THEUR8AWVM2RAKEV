@@ -1,18 +1,24 @@
--- Put this script in StarterGui
-local player = game.Players.LocalPlayer
+-- Create ScreenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "MyScreenGui"
+screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
-local gui = Instance.new("ScreenGui")
-gui.Parent = player.PlayerGui
-
+-- Create Frame
 local frame = Instance.new("Frame")
-frame.Position = UDim2.new(0, 0, 0, 0)
-frame.Size = UDim2.new(1, 0, 0, 50)
-frame.Parent = gui
+frame.Name = "MyFrame"
+frame.Size = UDim2.new(0, 128, 0, 52)
+frame.Position = UDim2.new(0.391, 0, 0, 0)
+frame.BackgroundTransparency = 1
+frame.Parent = screenGui
 
+-- Create TextLabel
 local textLabel = Instance.new("TextLabel")
-textLabel.Position = UDim2.new(0, 0, 0, 0)
-textLabel.Size = UDim2.new(1, 0, 1, 0)
-textLabel.Text = "Your Text Here"
+textLabel.Name = "MyTextLabel"
+textLabel.Size = UDim2.new(0, 128, 0, 52)
+textLabel.Position = UDim2.new(0.391, 0, 0, 0)
+textLabel.BackgroundTransparency = 1
+textLabel.Text = "Hello, Roblox Lua!"
 textLabel.TextColor3 = Color3.new(1, 1, 1)
-textLabel.BackgroundColor3 = Color3.new(0, 0, 0)
+textLabel.Font = Enum.Font.SourceSansBold
+textLabel.TextSize = 18
 textLabel.Parent = frame
