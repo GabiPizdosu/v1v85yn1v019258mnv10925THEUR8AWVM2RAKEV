@@ -363,7 +363,7 @@ ScrapTab:AddButton({
 
 
 Trolltab:AddButton({
-  Name = "Open safe house door",
+  Name = "Open/Close safe house door",
   Callback = function()
           local args = {
         [1] = "Door"
@@ -373,7 +373,7 @@ Trolltab:AddButton({
 })
 
 Trolltab:AddButton({
-  Name = "Activate safe house lights",
+  Name = "Activate/Deactivate safe house lights",
   Callback = function()
           local args = {
         [1] = "Lights"
