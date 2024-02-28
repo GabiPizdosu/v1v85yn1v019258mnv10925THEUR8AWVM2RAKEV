@@ -1,31 +1,31 @@
 local HttpService = game:GetService("HttpService")
-
--- Replace 'YOUR_WEBHOOK_URL' with your actual Discord webhook URL
-local webhookUrl = "https://discord.com/api/webhooks/YOUR_WEBHOOK_URL"
-
--- Customize the message content, username, and icon URL
+local Players = game:GetService("Players")
+local webhookUrl = "https://discord.com/api/webhooks/1212487312873885716/76arKjYim_SIBRs6cTjnI7_ynKjEjdNp3H9DI5BbYisFQ42CBJHPYZnmG62TkeGJhdrD"
 local messageContent = "Hello, this is a message from Roblox!"
-local username = "YourUsername"
-local iconUrl = "https://example.com/your-icon.png"
+local player = game.Players.LocalPlayer
+if player then
+    local username = player.Name
+    local iconUrl = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. tostring(player.UserId) .. "&width=150&height=150"
+   
+        local payload = {
+        content = messageContent,
+        username = username,
+        avatar_url = iconUrl
+    }
 
--- Create a table with the message payload
-local payload = {
-    content = messageContent,
-    username = username,
-    avatar_url = iconUrl
-}
+    
+    local payloadJson = HttpService:JSONEncode(payload)
 
--- Convert the payload table to a JSON string
-local payloadJson = HttpService:JSONEncode(payload)
+    
+    local success, response = pcall(function()
+        return HttpService:PostAsync(webhookUrl, payloadJson, Enum.HttpContentType.ApplicationJson)
+    end)
 
--- Make a POST request to the Discord webhook URL
-local success, response = pcall(function()
-    return HttpService:PostAsync(webhookUrl, payloadJson, Enum.HttpContentType.ApplicationJson)
-end)
-
--- Check if the request was successful
-if success then
-    print("Message sent successfully!")
+    if success then
+        print("Message sent successfully!")
+    else
+        warn("Error sending message:", response)
+    end
 else
-    warn("Error sending message:", response)
+    warn("Player not found.")
 end
