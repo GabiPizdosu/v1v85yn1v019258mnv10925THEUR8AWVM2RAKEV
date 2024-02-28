@@ -39,6 +39,11 @@ local ScrapTab = Window:MakeTab({
   PremiumOnly = false
 })
 
+local Trolltab = Window:MakeTab({
+  Name = "Trolling",
+  Icon = "rbxassetid://4483345998",
+  PremiumOnly = false
+})
 
 -- BUTTONS --
 
@@ -296,6 +301,34 @@ ScrapTab:AddButton({
     end
   })
 
+
+
+
+Trolltab:AddButton({
+  Name = "Open safe house door",
+  Callback = function()
+          local args = {
+        [1] = "Door"
+          }
+      workspace.Map.SafeHouse.Door.RemoteEvent:FireServer(unpack(args))
+    end    
+})
+
+Trolltab:AddButton({
+  Name = "Activate safe house lights",
+  Callback = function()
+          local args = {
+        [1] = "Lights"
+          }
+      workspace.Map.SafeHouse.Door.RemoteEvent:FireServer(unpack(args))
+    end    
+})
+
+
+
+
+
+-- TOGGLES --
 
 
 
