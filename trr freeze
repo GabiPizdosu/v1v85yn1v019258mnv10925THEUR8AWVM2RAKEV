@@ -1,0 +1,32 @@
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+
+
+local function freezeCharacter()
+    -- Get the current CFrame of the player
+    local playerCFrame = player.Character:GetPrimaryPartCFrame()
+
+    
+    local newPosition = playerCFrame.Position - Vector3.new(0, 5, 0)
+
+   
+    for _, part in pairs(character:GetDescendants()) do
+        if part:IsA("BasePart") then
+            part.Anchored = true
+        end
+    end
+    character:SetPrimaryPartCFrame(CFrame.new(newPosition))
+
+    
+    local platformSize = Vector3.new(10, 1, 10)  -- Set the size of the platform
+    local platform = Instance.new("Part")
+    platform.Size = platformSize
+    platform.Position = newPosition + Vector3.new(0, -platformSize.Y / 2, 0)
+    platform.Anchored = true
+    platform.Parent = game.Workspace
+
+   
+    humanoid.WalkSpeed = 0
+end
+freezeCharacter()
