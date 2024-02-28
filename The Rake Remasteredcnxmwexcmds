@@ -323,7 +323,7 @@ Trolltab:AddButton({
       workspace.Map.SafeHouse.Door.RemoteEvent:FireServer(unpack(args))
     end    
 })
-
+Trolltab:AddLabel("Must be close to them for them to work")
 
 
 
