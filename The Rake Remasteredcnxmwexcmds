@@ -1,1 +1,15 @@
+local function teleportPartsToCharacter(parent)
+    for _, child in pairs(parent:GetChildren()) do
+        if child:IsA("Model") or child:IsA("Part") then
+            teleportPartsToCharacter(child)
+        elseif child:IsA("UnionOperation") then
+            print("Teleporting to character")
+            child.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+        end
+    end
+end
+
+local ScrapSpawnFolder = workspace.Filter.ScrapSpawns
+
+teleportPartsToCharacter(ScrapSpawnFolder)
 
