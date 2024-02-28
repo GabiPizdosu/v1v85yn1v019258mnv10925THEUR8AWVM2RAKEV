@@ -258,24 +258,21 @@ Callback = function()
 ScrapTab:AddButton({
   Name = "Bring Scrap",
   Callback = function()
-        local function teleportScrapsToCharacter()
-          local character = game.Players.LocalPlayer.Character 
-
-          for _, ScrapSpawn in pairs(workspace.Filter.ScrapSpawns:GetChildren()) do
-              if ScrapSpawn:IsA("Part") then
-                  local scrapModel = ScrapSpawn:FindFirstChildOfClass("Model")
-                  local scrap = scrapModel and scrapModel:FindFirstChild("Scrap")
-
-                  if scrap then
-                      local unionOperation = scrap:FindFirstChildOfClass("UnionOperation")
-                      if unionOperation then
-                          character:SetPrimaryPartCFrame(unionOperation.CFrame * CFrame.new(scrapModel.Position))
-                      end
-                  end
-              end
-          end
+        local function teleportPartsToCharacter(parent)
+    for _, child in pairs(parent:GetChildren()) do
+        if child:IsA("Model") or child:IsA("Part") then
+            teleportPartsToCharacter(child)
+        elseif child:IsA("UnionOperation") then
+            print("Teleporting to character")
+            child.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
         end
-        teleportScrapsToCharacter()
+    end
+end
+
+local ScrapSpawnFolder = workspace.Filter.ScrapSpawns
+
+teleportPartsToCharacter(ScrapSpawnFolder)
+
 end
 })
 
