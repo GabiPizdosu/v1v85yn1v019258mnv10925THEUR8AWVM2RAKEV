@@ -1,7 +1,7 @@
 local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
 local webhookUrl = "https://discord.com/api/webhooks/1212487312873885716/76arKjYim_SIBRs6cTjnI7_ynKjEjdNp3H9DI5BbYisFQ42CBJHPYZnmG62TkeGJhdrD"
-local messageContent = "Hello, this is a message from Roblox!"
+local messageContent = "test!"
 local player = game.Players.LocalPlayer
 if player then
     local username = player.Name
