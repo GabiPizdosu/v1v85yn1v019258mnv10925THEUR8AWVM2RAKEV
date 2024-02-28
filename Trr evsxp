@@ -1,3 +1,6 @@
+-- Replace this line with the path to your IntValue
+local intValuePath = game:GetService("ReplicatedStorage"):WaitForChild("Timer")
+
 -- Create ScreenGui
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "MyScreenGui"
@@ -17,10 +20,30 @@ textLabel.Name = "MyTextLabel"
 textLabel.Size = UDim2.new(1, 0, 1, 0)
 textLabel.Position = UDim2.new(0, 0, 0, 0)
 textLabel.BackgroundTransparency = 1
-textLabel.Text = "Hello, Roblox Lua!"
+textLabel.Text = "0:00" -- Initial value
 textLabel.TextColor3 = Color3.new(1, 1, 1)
 textLabel.Font = Enum.Font.SourceSansBold
 textLabel.TextSize = 18
 textLabel.TextWrapped = true
 textLabel.TextYAlignment = Enum.TextYAlignment.Top -- Align text to the top
 textLabel.Parent = frame
+
+-- Function to update the text based on the seconds value
+local function updateText(secondsValue)
+    local minutes = math.floor(secondsValue / 60)
+    local seconds = secondsValue % 60
+    textLabel.Text = string.format("%d:%02d", minutes, seconds)
+end
+
+-- Refresh function (call this whenever you want to update the displayed time)
+local function refresh()
+    local secondsValue = intValuePath.Value
+    updateText(secondsValue)
+end
+
+-- Example: Refresh every 1 second (replace this with your desired refresh interval)
+spawn(function()
+    while wait(1) do
+        refresh()
+    end
+end)
