@@ -1,17 +1,21 @@
 -- Create ScreenGui
 local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "MyScreenGui"
+screenGui.Name = "screenguiahah"
 screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
 -- Create Frame
 local frame = Instance.new("Frame")
 frame.Name = "MyFrame"
 frame.Size = UDim2.new(0, 128, 0, 52)
-frame.Position = UDim2.new(0.5, -64, 0, 0) -- Centered horizontally
+frame.Position = UDim2.new(0.5, -64, 0, 0)
 frame.BackgroundTransparency = 1
 frame.Parent = screenGui
 
 -- Create TextLabel
+
+
+
+
 local textLabel = Instance.new("TextLabel")
 textLabel.Name = "TIMERRR"
 textLabel.Size = UDim2.new(1, 0, 1, 0)
