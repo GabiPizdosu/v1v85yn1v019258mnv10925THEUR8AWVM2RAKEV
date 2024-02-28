@@ -286,25 +286,6 @@ end
 })
 
 
-ScrapTab:AddButton({
-  Name = "Sell Scrap For Much Points (press while in shop",
-  Callback = function()
-      function executeTask()
-          local args = {
-          [1] = "SellScraps",
-          [2] = "Scraps"
-      }
-
-      game:GetService("ReplicatedStorage").ShopEvent:FireServer(unpack(args))
-
-      end
-
-      for i = 1, 300 do
-          executeTask()
-      end
-    end
-})
-
 
 
 
