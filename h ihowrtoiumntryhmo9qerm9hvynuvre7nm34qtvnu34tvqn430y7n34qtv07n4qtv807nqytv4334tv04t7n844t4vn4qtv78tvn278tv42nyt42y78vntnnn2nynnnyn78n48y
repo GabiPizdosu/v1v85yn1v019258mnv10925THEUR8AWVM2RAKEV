@@ -7,18 +7,20 @@ screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 local frame = Instance.new("Frame")
 frame.Name = "MyFrame"
 frame.Size = UDim2.new(0, 128, 0, 52)
-frame.Position = UDim2.new(0.391, 0, 0, 0)
+frame.Position = UDim2.new(0.5, -64, 0, 0) -- Centered horizontally
 frame.BackgroundTransparency = 1
 frame.Parent = screenGui
 
 -- Create TextLabel
 local textLabel = Instance.new("TextLabel")
-textLabel.Name = "Timer"
-textLabel.Size = UDim2.new(0, 128, 0, 52)
-textLabel.Position = UDim2.new(0.391, 0, 0, 0)
+textLabel.Name = "TIMERRR"
+textLabel.Size = UDim2.new(1, 0, 1, 0)
+textLabel.Position = UDim2.new(0, 0, 0, 0)
 textLabel.BackgroundTransparency = 1
-textLabel.Text = "timer"
+textLabel.Text = "TESTTT!"
 textLabel.TextColor3 = Color3.new(1, 1, 1)
 textLabel.Font = Enum.Font.SourceSansBold
 textLabel.TextSize = 18
+textLabel.TextWrapped = true
+textLabel.TextYAlignment = Enum.TextYAlignment.Top -- Align text to the top
 textLabel.Parent = frame
