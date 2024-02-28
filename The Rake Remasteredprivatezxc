@@ -39,12 +39,6 @@ local ScrapTab = Window:MakeTab({
   PremiumOnly = false
 })
 
---[[
-Name = <string> - The name of the tab.
-Icon = <string> - The icon of the tab.
-PremiumOnly = <bool> - Makes the tab accessible to Sirus Premium users only.
-]]
-
 
 -- BUTTONS --
 
@@ -264,26 +258,26 @@ Callback = function()
 ScrapTab:AddButton({
   Name = "Bring Scrap",
   Callback = function()
-        local function teleportPartsToCharacter(parent)
-    for _, child in pairs(parent:GetChildren()) do
-        if child:IsA("Model") or child:IsA("Part") then
-            teleportPartsToCharacter(child)
-        elseif child:IsA("UnionOperation") then
-            child.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+        local function teleportScrapsToCharacter()
+          local character = game.Players.LocalPlayer.Character 
+
+          for _, ScrapSpawn in pairs(workspace.Filter.ScrapSpawns:GetChildren()) do
+              if ScrapSpawn:IsA("Part") then
+                  local scrapModel = ScrapSpawn:FindFirstChildOfClass("Model")
+                  local scrap = scrapModel and scrapModel:FindFirstChild("Scrap")
+
+                  if scrap then
+                      local unionOperation = scrap:FindFirstChildOfClass("UnionOperation")
+                      if unionOperation then
+                          character:SetPrimaryPartCFrame(unionOperation.CFrame * CFrame.new(scrapModel.Position))
+                      end
+                  end
+              end
+          end
         end
-    end
+        teleportScrapsToCharacter()
 end
-
-local ScrapSpawnFolder = workspace.Filter.ScrapSpawns
-
-teleportPartsToCharacter(ScrapSpawnFolder)
-  end
 })
-
-
-
-
-
 
 
 OrionLib:Init()
