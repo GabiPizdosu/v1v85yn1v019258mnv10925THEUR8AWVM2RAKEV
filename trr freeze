@@ -1,32 +1,31 @@
-local player = game.Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoid = character:WaitForChild("Humanoid")
+local HttpService = game:GetService("HttpService")
 
+-- Replace 'YOUR_WEBHOOK_URL' with your actual Discord webhook URL
+local webhookUrl = "https://discord.com/api/webhooks/YOUR_WEBHOOK_URL"
 
-local function freezeCharacter()
-    -- Get the current CFrame of the player
-    local playerCFrame = player.Character:GetPrimaryPartCFrame()
+-- Customize the message content, username, and icon URL
+local messageContent = "Hello, this is a message from Roblox!"
+local username = "YourUsername"
+local iconUrl = "https://example.com/your-icon.png"
 
-    
-    local newPosition = playerCFrame.Position - Vector3.new(0, 5, 0)
+-- Create a table with the message payload
+local payload = {
+    content = messageContent,
+    username = username,
+    avatar_url = iconUrl
+}
 
-   
-    for _, part in pairs(character:GetDescendants()) do
-        if part:IsA("BasePart") then
-            part.Anchored = true
-        end
-    end
-    character:SetPrimaryPartCFrame(CFrame.new(newPosition))
+-- Convert the payload table to a JSON string
+local payloadJson = HttpService:JSONEncode(payload)
 
-    
-    local platformSize = Vector3.new(10, 1, 10)  -- Set the size of the platform
-    local platform = Instance.new("Part")
-    platform.Size = platformSize
-    platform.Position = newPosition + Vector3.new(0, -platformSize.Y / 2, 0)
-    platform.Anchored = true
-    platform.Parent = game.Workspace
+-- Make a POST request to the Discord webhook URL
+local success, response = pcall(function()
+    return HttpService:PostAsync(webhookUrl, payloadJson, Enum.HttpContentType.ApplicationJson)
+end)
 
-   
-    humanoid.WalkSpeed = 0
+-- Check if the request was successful
+if success then
+    print("Message sent successfully!")
+else
+    warn("Error sending message:", response)
 end
-freezeCharacter()
