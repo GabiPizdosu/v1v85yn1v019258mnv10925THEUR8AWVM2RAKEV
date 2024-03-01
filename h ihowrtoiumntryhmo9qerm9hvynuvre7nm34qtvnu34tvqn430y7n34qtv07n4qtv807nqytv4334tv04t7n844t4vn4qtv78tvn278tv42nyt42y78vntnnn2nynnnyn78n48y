@@ -1,1 +1,30 @@
-w
+local car = game.Workspace.Car -- Replace with a reference to your car model
+local waypoints = {} -- Add Vector3 waypoints that represent points on your road
+
+-- Function to move the car to the next waypoint
+local function moveToNextWaypoint()
+    local currentWaypoint = table.remove(waypoints, 1) -- Get the first waypoint
+
+    if currentWaypoint then
+        local path = {car.Position, currentWaypoint}
+        local tweenInfo = TweenInfo.new((currentWaypoint - car.Position).Magnitude / car.Speed, Enum.EasingStyle.Linear)
+
+        local tween = game.TweenService:Create(car, tweenInfo, {Position = currentWaypoint})
+        tween:Play()
+
+        tween.Completed:Connect(function()
+            moveToNextWaypoint() -- Move to the next waypoint after reaching the current one
+        end)
+    end
+end
+
+-- Set up waypoints (replace these with your road points)
+waypoints = {
+    Vector3.new(10, 0, 10),
+    Vector3.new(20, 0, 10),
+    Vector3.new(20, 0, 20),
+    Vector3.new(10, 0, 20),
+}
+
+-- Start moving the car
+moveToNextWaypoint()
