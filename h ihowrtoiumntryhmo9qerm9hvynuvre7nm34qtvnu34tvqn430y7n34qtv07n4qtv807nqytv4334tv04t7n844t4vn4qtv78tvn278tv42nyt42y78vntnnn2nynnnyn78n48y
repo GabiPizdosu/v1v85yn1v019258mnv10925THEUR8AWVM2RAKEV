@@ -1,6 +1,8 @@
 local car = game.Workspace.Car -- Replace with a reference to your car model
 local roadColor = Color3.new(0, 0, 0) -- Replace with the color of your road
 local speed = 10 -- Adjust the speed as needed
+
+-- Function to check if a position is on the road
 local function isOnRoad(position)
     local region = Region3.new(position - Vector3.new(1, 0, 1), position + Vector3.new(1, 0, 1))
     local part = workspace:FindPartOnRayWithIgnoreList(Ray.new(position, Vector3.new(0, -1, 0)), {car})
