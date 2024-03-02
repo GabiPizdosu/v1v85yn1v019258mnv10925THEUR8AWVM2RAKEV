@@ -1,37 +1,64 @@
-local car = game.Workspace.Car -- Replace with a reference to your car model
-local roadColor = Color3.new(0, 0, 0) -- Replace with the color of your road
-local speed = 10 -- Adjust the speed as needed
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
 
--- Function to check if a position is on the road
-local function isOnRoad(position)
-    local region = Region3.new(position - Vector3.new(1, 0, 1), position + Vector3.new(1, 0, 1))
-    local part = workspace:FindPartOnRayWithIgnoreList(Ray.new(position, Vector3.new(0, -1, 0)), {car})
-    
-    if part and part.BrickColor == BrickColor.new(roadColor) then
+local roadColor = Color3.new(0, 0, 0) -- Replace with the color of your road
+local speed = 50
+
+-- Function to check if the road is in front of the car
+local function isRoadInFront()
+    local car = character:FindFirstChildWhichIsA("Model") -- Adjust based on your car's class
+    if not car then
+        return false
+    end
+
+    local primaryPart = car:FindFirstChild("PrimaryPart")
+    if not primaryPart then
+        return false
+    end
+
+    local rayStart = primaryPart.Position
+    local rayDirection = primaryPart.CFrame.LookVector
+    local raycastResult = workspace:Raycast(rayStart, rayDirection, {car})
+
+    if raycastResult and raycastResult.Instance.BrickColor == BrickColor.new(roadColor) then
         return true
     else
         return false
     end
 end
 
--- Function to move the car based on keyboard input
-local function moveCar()
+-- Function to drive the car based on keyboard input
+local function driveCar()
     local userInputService = game:GetService("UserInputService")
-    local player = game.Players.LocalPlayer
-    local character = player.Character or player.CharacterAdded:Wait()
 
     userInputService.InputBegan:Connect(function(input)
-        if input.KeyCode == Enum.KeyCode.W and isOnRoad(car.Position + car.CFrame.LookVector * 5) then
-            car:SetPrimaryPartCFrame(car.CFrame * CFrame.new(0, 0, -speed))
-        elseif input.KeyCode == Enum.KeyCode.S and isOnRoad(car.Position - car.CFrame.LookVector * 5) then
-            car:SetPrimaryPartCFrame(car.CFrame * CFrame.new(0, 0, speed))
+        local car = character:FindFirstChildWhichIsA("Model") -- Adjust based on your car's class
+        if not car then
+            return
+        end
+
+        local primaryPart = car:FindFirstChild("PrimaryPart")
+        if not primaryPart then
+            return
+        end
+
+        if input.KeyCode == Enum.KeyCode.W then
+            if isRoadInFront() then
+                primaryPart.CFrame = primaryPart.CFrame * CFrame.new(0, 0, -speed)
+            else
+                -- Optionally, add logic to adjust direction or take alternative action when road is not detected
+                print("Road not detected. Adjusting direction.")
+            end
+        elseif input.KeyCode == Enum.KeyCode.S then
+            primaryPart.CFrame = primaryPart.CFrame * CFrame.new(0, 0, speed)
         elseif input.KeyCode == Enum.KeyCode.A then
-            car:SetPrimaryPartCFrame(car.CFrame * CFrame.Angles(0, -math.rad(5), 0))
+            primaryPart.CFrame = primaryPart.CFrame * CFrame.Angles(0, -math.rad(5), 0)
         elseif input.KeyCode == Enum.KeyCode.D then
-            car:SetPrimaryPartCFrame(car.CFrame * CFrame.Angles(0, math.rad(5), 0))
+            primaryPart.CFrame = primaryPart.CFrame * CFrame.Angles(0, math.rad(5), 0)
         end
     end)
 end
 
--- Start moving the car based on keyboard input
-moveCar()
+-- Start driving the car
+driveCar()
