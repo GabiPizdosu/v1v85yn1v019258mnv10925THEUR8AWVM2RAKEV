@@ -1,30 +1,37 @@
 local car = game.Workspace.Car -- Replace with a reference to your car model
-local waypoints = {} -- Add Vector3 waypoints that represent points on your road
+local roadColor = Color3.new(0, 0, 0) -- Replace with the color of your road
+local speed = 10 -- Adjust the speed as needed
 
--- Function to move the car to the next waypoint
-local function moveToNextWaypoint()
-    local currentWaypoint = table.remove(waypoints, 1) -- Get the first waypoint
-
-    if currentWaypoint then
-        local path = {car.Position, currentWaypoint}
-        local tweenInfo = TweenInfo.new((currentWaypoint - car.Position).Magnitude / car.Speed, Enum.EasingStyle.Linear)
-
-        local tween = game.TweenService:Create(car, tweenInfo, {Position = currentWaypoint})
-        tween:Play()
-
-        tween.Completed:Connect(function()
-            moveToNextWaypoint() -- Move to the next waypoint after reaching the current one
-        end)
+-- Function to check if a position is on the road
+local function isOnRoad(position)
+    local region = Region3.new(position - Vector3.new(1, 0, 1), position + Vector3.new(1, 0, 1))
+    local part = workspace:FindPartOnRayWithIgnoreList(Ray.new(position, Vector3.new(0, -1, 0)), {car})
+    
+    if part and part.BrickColor == BrickColor.new(roadColor) then
+        return true
+    else
+        return false
     end
 end
 
--- Set up waypoints (replace these with your road points)
-waypoints = {
-    Vector3.new(10, 0, 10),
-    Vector3.new(20, 0, 10),
-    Vector3.new(20, 0, 20),
-    Vector3.new(10, 0, 20),
-}
+-- Function to move the car based on keyboard input
+local function moveCar()
+    local userInputService = game:GetService("UserInputService")
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
 
--- Start moving the car
-moveToNextWaypoint()
+    userInputService.InputBegan:Connect(function(input)
+        if input.KeyCode == Enum.KeyCode.W and isOnRoad(car.Position + car.CFrame.LookVector * 5) then
+            car:SetPrimaryPartCFrame(car.CFrame * CFrame.new(0, 0, -speed))
+        elseif input.KeyCode == Enum.KeyCode.S and isOnRoad(car.Position - car.CFrame.LookVector * 5) then
+            car:SetPrimaryPartCFrame(car.CFrame * CFrame.new(0, 0, speed))
+        elseif input.KeyCode == Enum.KeyCode.A then
+            car:SetPrimaryPartCFrame(car.CFrame * CFrame.Angles(0, -math.rad(5), 0))
+        elseif input.KeyCode == Enum.KeyCode.D then
+            car:SetPrimaryPartCFrame(car.CFrame * CFrame.Angles(0, math.rad(5), 0))
+        end
+    end)
+end
+
+-- Start moving the car based on keyboard input
+moveCar()
