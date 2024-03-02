@@ -6,8 +6,7 @@ local roadColor = Color3.new(0, 0, 0) -- Replace with the color of your road
 local speed = 50
 
 -- Function to check if the road is in front of the car
-local function isRoadInFront()
-    local car = character:FindFirstChildWhichIsA("Model") -- Adjust based on your car's class
+local function isRoadInFront(car)
     if not car then
         return false
     end
@@ -33,29 +32,36 @@ local function driveCar()
     local userInputService = game:GetService("UserInputService")
 
     userInputService.InputBegan:Connect(function(input)
-        local car = character:FindFirstChildWhichIsA("Model") -- Adjust based on your car's class
-        if not car then
-            return
+        local car
+
+        for _, descendant in ipairs(workspace:GetDescendants()) do
+            if descendant:IsA("Model") and descendant:FindFirstChild("PrimaryPart") then
+                car = descendant
+                break
+            end
         end
 
-        local primaryPart = car:FindFirstChild("PrimaryPart")
-        if not primaryPart then
+        if not car then
+            print("Car not found")
             return
         end
 
         if input.KeyCode == Enum.KeyCode.W then
-            if isRoadInFront() then
-                primaryPart.CFrame = primaryPart.CFrame * CFrame.new(0, 0, -speed)
+            if isRoadInFront(car) then
+                car.PrimaryPart.CFrame = car.PrimaryPart.CFrame * CFrame.new(0, 0, -speed)
+                print("Moving forward")
             else
-                -- Optionally, add logic to adjust direction or take alternative action when road is not detected
                 print("Road not detected. Adjusting direction.")
             end
         elseif input.KeyCode == Enum.KeyCode.S then
-            primaryPart.CFrame = primaryPart.CFrame * CFrame.new(0, 0, speed)
+            car.PrimaryPart.CFrame = car.PrimaryPart.CFrame * CFrame.new(0, 0, speed)
+            print("Moving backward")
         elseif input.KeyCode == Enum.KeyCode.A then
-            primaryPart.CFrame = primaryPart.CFrame * CFrame.Angles(0, -math.rad(5), 0)
+            car.PrimaryPart.CFrame = car.PrimaryPart.CFrame * CFrame.Angles(0, -math.rad(5), 0)
+            print("Turning left")
         elseif input.KeyCode == Enum.KeyCode.D then
-            primaryPart.CFrame = primaryPart.CFrame * CFrame.Angles(0, math.rad(5), 0)
+            car.PrimaryPart.CFrame = car.PrimaryPart.CFrame * CFrame.Angles(0, math.rad(5), 0)
+            print("Turning right")
         end
     end)
 end
