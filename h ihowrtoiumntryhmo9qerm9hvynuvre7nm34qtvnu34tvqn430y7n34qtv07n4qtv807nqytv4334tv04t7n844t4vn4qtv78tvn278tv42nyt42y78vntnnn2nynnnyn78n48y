@@ -1,48 +1,7 @@
-
-local webhookUrl = "https://discord.com/api/webhooks/1212487312873885716/76arKjYim_SIBRs6cTjnI7_ynKjEjdNp3H9DI5BbYisFQ42CBJHPYZnmG62TkeGJhdrD"
-
-local player = game.Players.LocalPlayer
-local username = player.Name
-local accountAge = player.AccountAge
-local gameUsername = player.DisplayName -- Use DisplayName for the in-game username
-local serverId = game.PlaceId -- Use PlaceId for the server ID
-local avatarUrl = "https://www.roblox.com/Thumbs/Avatar.ashx?x=100&y=100&username=" .. username
-
-local joinScript = "```lua\nEXECUTE THIS TO JOIN THEIR SERVER: \n``script to join server " .. serverId .. " goes here```\n"
-
-local payload = {
-    content = nil,
-    embeds = {
-        {
-            title = "Script Has Been Executed!",
-            description = "Username: " .. username .. "\nGame Username: " .. gameUsername .. "\nAccount Age: " .. accountAge .. "\n\n" .. joinScript,
-            color = nil,
-            image = {
-                url = avatarUrl
-            }
-        }
-    },
-    username = "The Rake",
-    avatar_url = "https://th.bing.com/th/id/OIP.-M26uq0243bsJB97pgaZlQHaEK?w=319&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-    attachments = {}
-}
-
-local payloadJson = game:GetService("HttpService"):JSONEncode(payload)
-
-local httpRequest = syn and (syn.request or http.request) or http_request or request or httprequest
-
-if httpRequest then
-    local response = httpRequest({
-        Url = webhookUrl,
-        Method = "POST",
-        Headers = {
-            ["Content-Type"] = "application/json"
-        },
-        Body = payloadJson
-    })
-
-    -- Optionally, you can print the response to check for errors
-    print(response.Body)
-else
-    warn("HTTP request not available.")
-end
+pcall(function()
+    game:GetService("TeleportService"):TeleportToPlaceInstance(
+        game.PlaceId,
+        "c85ecf5a-e17c-41c5-9b6b-5e26925344cf",
+        game:GetService("Players").LocalPlayer
+    )
+end)
