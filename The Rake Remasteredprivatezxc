@@ -24,7 +24,7 @@ _G.InfStamina = true
 local EXPLOITSTAB = Window:MakeTab({
     Name = "Exploits",
     Icon = "rbxassetid://4483345998",
-    PremiumOnly = false
+    PremiumOnly = true
 })
 
 local ESPTAB = Window:MakeTab({
@@ -340,7 +340,7 @@ end
 })
 
 
-ScrapTab:AddButton({
+EXPLOITSTAB:AddButton({
   Name = "Sell Scrap For Many points (use while in shop)",
   Callback = function()
       function executeTask()
