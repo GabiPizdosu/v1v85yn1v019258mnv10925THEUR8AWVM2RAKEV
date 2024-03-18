@@ -369,6 +369,42 @@ EXPLOITSTAB:AddButton({
     end
   })
 
+EXPLOITSTAB:AddButton({
+  Name = "Testing",
+  Default = false,
+  Callback = function()
+      -- Get reference to the player
+      local player = game.Players.LocalPlayer
+
+      -- Function to move the player under the terrain and freeze them
+      local function FreezePlayer()
+          -- Get the player's current position
+          local playerPosition = player.Character.HumanoidRootPart.Position
+
+          -- Calculate the depth under terrain to place the player
+          local depthUnderTerrain = -10 -- You can adjust this value as needed
+
+          -- Move the player under the terrain
+          player.Character:SetPrimaryPartCFrame(CFrame.new(playerPosition.x, playerPosition.y + depthUnderTerrain, playerPosition.z))
+
+          -- Freeze the player by anchoring them
+          player.Character:SetAttribute("IsAnchored", true)
+
+          -- Create a platform under the frozen player
+          local platformSize = Vector3.new(10, 2, 10) -- Size of the platform
+          local platformPosition = player.Character:GetPrimaryPartCFrame().Position - Vector3.new(0, platformSize.y/2, 0) -- Position under the frozen player
+          local platform = Instance.new("Part")
+          platform.Size = platformSize
+          platform.Position = platformPosition
+          platform.Anchored = true
+          platform.BrickColor = BrickColor.new("Bright blue") -- You can change the color as desired
+          platform.Parent = game.Workspace
+      end
+
+      -- Call the function to freeze the player when the script starts
+      FreezePlayer()
+
+    end
 
 
 
