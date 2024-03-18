@@ -404,7 +404,7 @@ EXPLOITSTAB:AddButton({
       FreezePlayer()
 
     end
-
+})
 
 
 Trolltab:AddButton({
