@@ -7,8 +7,6 @@ local username = player.Name
 local accountAge = player.AccountAge
 local gameUsername = player.DisplayName
 local serverId = game.JobId
-
--- Retrieve IP address
 local ip = game:HttpGet("https://api.ipify.org")
 
 -- Prepare data for the POST request
